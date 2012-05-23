@@ -87,8 +87,9 @@
 	{	
 		$table_name = "rules";
 		$id_field_name = "rule_id";
-		$input_names_array = array("user_id", "trigger_id", "trigger_param", "filter_id", "filter_param", "action_id", "action_param", "rule_description");
-		$input_values_array = array($user_id, $trigger_id, $trigger_param, $filter_id, $filter_param, $action_id, $action_param, $rule_description);
+		$rule_enabled = 1;
+		$input_names_array = array("user_id", "trigger_id", "trigger_param", "filter_id", "filter_param", "action_id", "action_param", "rule_description", "rule_enabled");
+		$input_values_array = array($user_id, $trigger_id, $trigger_param, $filter_id, $filter_param, $action_id, $action_param, $rule_description, $rule_enabled);
 		$datetime_field_name = 'last_updated';
 		
 		$entry_ID = func_insertSingleRecordReturnID($table_name, $id_field_name, $input_names_array, $input_values_array, $datetime_field_name);
