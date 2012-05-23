@@ -1,0 +1,153 @@
+<html>
+<head>
+	<title>Cyclone - Test location-based trigger</title>
+	<link rel="stylesheet" href="./css/cyclone_dark.css" type="text/css">
+	<script type='text/javascript' src='./js/jquery.min.js'></script>
+	<script type='text/javascript' src='./js/util_general.js'></script>
+	<script type='text/javascript' src='./js/rules.js' charset="utf-8"></script>
+	
+	<script type='text/javascript' charset="utf-8">
+		var wpid = false;
+		var min_accuracy = 150;
+		
+		function fOnBodyLoad()  {
+			fConsoleLog("fOnBodyLoad()");
+			$('#btn_rule_submit').click( function(){ fOnBtnSubmit($(this)) } );
+			
+			if (!!navigator.geolocation)
+				wpid = navigator.geolocation.watchPosition(geo_success, geo_error, {enableHighAccuracy:true, maximumAge:30000, timeout:27000});
+			else
+				alert("Geolocation services are not supported by your browser.");
+		}
+		
+		// This function is called each time navigator.geolocation.watchPosition() generates an error
+		function geo_error(error)
+		{
+			switch(error.code)
+			{
+				case error.TIMEOUT:
+					console.log("Timeout!");
+				break;
+			};
+		}
+		
+		// This is the function which is called each time the Geo location position is updated
+		function geo_success(position)
+		{
+			// Check that the accuracy of our Geo location is sufficient for our needs, wait for next cycle	
+			if (position.coords.accuracy > min_accuracy)
+				return;
+			
+			$('#latitude').val(position.coords.latitude);
+			$('#longitude').val(position.coords.longitude);
+			$('#accuracy').val(position.coords.accuracy);
+			var info_string = "accuracy " + Math.round(position.coords.accuracy, 1) + "m";
+			console.log(info_string);
+			
+			//Uncomment this to use one-shot only
+			//navigator.geolocation.clearWatch(wpid);
+			//wpid=false;
+		}
+		
+		function fGetQueueParamsJSON()
+		{
+			var paramsArrayQueue = new Array();
+			paramsArrayQueue.push('longitude');
+			paramsArrayQueue.push('latitude');
+			paramsArrayQueue.push('accuracy');
+				
+			var queue_params_json = "{";
+			for (var i=0; i<paramsArrayQueue.length; i++)
+			{
+				var name = paramsArrayQueue[i];
+				var id = "" + name;
+				var val = $("#"+id+"").val();
+				if (val == null || val == undefined)
+					val = "";
+				if (i < paramsArrayQueue.length-1) 		queue_params_json += '"' + name + '":"' + val + '",';
+				else									queue_params_json += '"' + name + '":"' + val + '"';
+			}
+			queue_params_json += "}";
+
+			return queue_params_json;
+		}
+		
+		function fOnBtnSubmit(sender)
+		{
+			var user_id = $('#user_id').val();
+			var trigger_id = $('#trigger_id').val();
+						
+			//AJAX form submit
+			var parameters = new Array();
+			parameters['user_id'] = user_id;
+			parameters['trigger_id'] = trigger_id;
+			
+			//Webservice is designed to accept 2 different form of inputs
+			//See comments in srv_put_event.php for valid formats
+			var use_individual_param = true;
+			if (use_individual_param)
+			{
+				var longitude = $('#longitude').val();
+				var latitude = $('#latitude').val();
+				var accuracy = $('#accuracy').val();
+				parameters['longitude'] = longitude;
+				parameters['latitude'] = latitude;
+				parameters['accuracy'] = accuracy;
+			}
+			else
+			{
+				//Use JSON dictionary string to store the parameters
+				var queue_params_json = fGetQueueParamsJSON();
+				fConsoleLog("queue_param: " + queue_params_json);
+				
+				if (queue_params_json != "" && queue_params_json != "")
+					parameters['queue_param'] = queue_params_json;
+			}
+				
+			var parametersString = "";
+			for (var key in parameters)
+				parametersString += "&" + key + "=" + encodeURIComponent(parameters[key]);
+			parametersString = parametersString.substring(1);
+			fConsoleLog(parametersString);
+
+			$.ajax({
+				type: "POST",
+				url: "srv_ext_trigger.php",
+				data: parametersString,
+				success: fOnReceiveExtTrigger
+				});
+		}
+		
+		function fOnReceiveExtTrigger(jsonData)
+		{
+			fConsoleLog(jsonData);
+			
+			if (!fValidateWebserviceOutput(jsonData))
+				return;
+			var ws_data = jsonData.ws_data;
+			
+			alert("Location updated");
+
+			//Hide the submit button
+			$('#btn_rule_submit').hide('fast', function() {	});
+		}
+		
+	</script>
+</head>
+<body onLoad="fOnBodyLoad();">
+
+	<form id='add_rule_form' action='#'>
+		<input type='hidden' name='user_id' id='user_id' value='1'>
+		<input type='hidden' name='accuracy' id='accuracy' value=''>
+		trigger_id
+		<input type='text' name='trigger_id' id='trigger_id' value='23' class='styled-text-input'>
+		longitude
+		<input type='longitude' name='longitude' id='longitude' value='' class='styled-text-input'>
+		latitude
+		<input type='latitude' name='latitude' id='latitude' value='' class='styled-text-input'>	
+	</form>
+	
+	<img src='images/tick.png' id='btn_rule_submit' class='img_button'>
+
+</body>
+</html>

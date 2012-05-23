@@ -1,0 +1,75 @@
+<html>
+<head>
+	<title>Cyclone - Test location-based trigger</title>
+	<link rel="stylesheet" href="./css/cyclone_dark.css" type="text/css">
+	<script type='text/javascript' src='./js/jquery.min.js'></script>
+	<script type='text/javascript' src='./js/util_general.js'></script>
+	<script type='text/javascript' src='./js/rules.js' charset="utf-8"></script>
+	
+	<script type='text/javascript' charset="utf-8">
+		var wpid = false;
+		var min_accuracy = 150;
+		
+		function fOnBodyLoad()  {
+			fConsoleLog("fOnBodyLoad()");
+			$('#btn_trigger_submit').click( function(){ fOnBtnSubmit($(this)) } );
+			$('#iframe').hide();
+		}
+
+		function fOnBtnSubmit(sender)
+		{
+			var user_id = $('#user_id').val();
+			var trigger_id = $('#trigger_id').val();
+						
+			//AJAX form submit
+			var parameters = new Array();
+			parameters['user_id'] = user_id;
+			parameters['trigger_id'] = trigger_id;
+			parameters['datetime'] = (new Date()).toString();
+						
+			var parametersString = "";
+			for (var key in parameters)
+				parametersString += "&" + key + "=" + encodeURIComponent(parameters[key]);
+			parametersString = parametersString.substring(1);
+			fConsoleLog(parametersString);
+
+			$.ajax({
+				type: "POST",
+				url: "srv_ext_trigger.php",
+				data: parametersString,
+				success: fOnReceiveExtTrigger
+				});
+		}
+		
+		function fOnReceiveExtTrigger(jsonData)
+		{
+			fConsoleLog(jsonData);
+			
+			if (!fValidateWebserviceOutput(jsonData))
+				return;
+			var ws_data = jsonData.ws_data;
+			
+			//Hide the submit button
+			$('#btn_trigger_submit').hide('fast', function() {	});
+			
+			$('#output').html(ws_data.response);
+			$('#output').show('fast', function() {	});
+			
+			alert("Triggered");
+		}
+		
+	</script>
+</head>
+<body onLoad="fOnBodyLoad();">
+
+	<form id='add_rule_form' action='#'>
+		<input type='hidden' name='user_id' id='user_id' value='1'>
+		<input type='hidden' name='trigger_id' id='trigger_id' value='1'>
+	</form>
+	Trigger HDMI 'connect' async event 
+	<img src='images/tick.png' id='btn_trigger_submit' class='img_button'>
+	<br/><br/>
+	<div id='output' name='output' style='width:100%; height:300px; overflow:auto; background-color:#222222; border: 1px dashed #333333;'></div>
+
+</body>
+</html>
