@@ -109,17 +109,30 @@
 	if (!$selectDatabaseOK)
 		func_dieWithMessage("Cannot select database " . $DATABASE_NAME . " with user '" . $DATABASE_USER . "'");
 	
-	//List the tables
+	//Validate the tables
 	$result = mysql_query("SHOW TABLES", $link);
+	$needImport = false;
 	if(!$result) {
 		echo "Warning: database contains no table <br/>\n";
+		$needImport = true;
 	}
 	else {
 		echo("Test query with user '" . $DATABASE_USER . "'. Table list: <br/>\n");
-		while ($one_record = mysql_fetch_assoc($result))
-			echo( " - " . $one_record["Tables_in_" . $DATABASE_NAME] . " <br/>\n");
+		$tableCount = 0;
+		while ($one_record = mysql_fetch_assoc($result)) {
+			echo(" - " . $one_record["Tables_in_" . $DATABASE_NAME] . " <br/>\n");
+			$tableCount++;
+		}
+		if ($tableCount < 11)
+			$needImport = true;
 	}
 	
 	mysql_close($link);
 	
+	//Reload data if needed
+	if ($needImport) {
+		passthru("nohup mysql -uroot -p" . $DATABASE_PASS . " " . $DATABASE_NAME . " < cyclone.sql");
+		echo("Database is not clean ($tableCount out of 11 tables). Force reloaded.");
+	}
+
  ?>
