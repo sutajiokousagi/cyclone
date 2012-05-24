@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.10.1
+-- version 3.5.1
 -- http://www.phpmyadmin.net
 --
--- Host: 192.168.11.24
--- Generation Time: May 23, 2012 at 10:48 PM
--- Server version: 5.0.95
--- PHP Version: 5.2.6
+-- Host: localhost
+-- Generation Time: May 25, 2012 at 01:44 AM
+-- Server version: 5.1.40
+-- PHP Version: 5.2.13
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -31,14 +31,14 @@ USE `cyclone`;
 
 DROP TABLE IF EXISTS `actions`;
 CREATE TABLE IF NOT EXISTS `actions` (
-  `action_id` int(11) NOT NULL auto_increment,
-  `action_enabled` tinyint(4) NOT NULL default '1',
+  `action_id` int(11) NOT NULL AUTO_INCREMENT,
+  `action_enabled` tinyint(4) NOT NULL DEFAULT '1',
   `module_id` int(11) NOT NULL,
   `action_name` varchar(64) NOT NULL,
   `action_alias` varchar(32) NOT NULL,
-  `action_params` varchar(64) default NULL,
+  `action_params` varchar(64) DEFAULT NULL,
   `action_description` text,
-  PRIMARY KEY  (`action_id`)
+  PRIMARY KEY (`action_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 --
@@ -65,13 +65,13 @@ INSERT INTO `actions` (`action_id`, `action_enabled`, `module_id`, `action_name`
 
 DROP TABLE IF EXISTS `configs`;
 CREATE TABLE IF NOT EXISTS `configs` (
-  `config_id` int(11) NOT NULL auto_increment,
+  `config_id` int(11) NOT NULL AUTO_INCREMENT,
   `module_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `config_name` varchar(64) NOT NULL,
   `config_param` text NOT NULL,
   `last_updated` datetime NOT NULL,
-  PRIMARY KEY  (`config_id`)
+  PRIMARY KEY (`config_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
 
 --
@@ -93,21 +93,21 @@ INSERT INTO `configs` (`config_id`, `module_id`, `user_id`, `config_name`, `conf
 
 DROP TABLE IF EXISTS `events`;
 CREATE TABLE IF NOT EXISTS `events` (
-  `event_id` int(11) NOT NULL auto_increment,
+  `event_id` int(11) NOT NULL AUTO_INCREMENT,
   `trigger_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `rule_id` int(11) default NULL,
+  `rule_id` int(11) DEFAULT NULL,
   `event_param` text,
-  `event_status` int(11) NOT NULL default '0',
+  `event_status` int(11) NOT NULL DEFAULT '0',
   `last_updated` datetime NOT NULL,
-  PRIMARY KEY  (`event_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1243 ;
+  PRIMARY KEY (`event_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1245 ;
 
 --
 -- Dumping data for table `events`
 --
 
-INSERT INTO `events` (`event_id`, `trigger_id`, `user_id`, `rule_id`, `event_param`, `event_status`, `last_updated`) VALUES
+-- No data required for this table
 
 -- --------------------------------------------------------
 
@@ -117,25 +117,15 @@ INSERT INTO `events` (`event_id`, `trigger_id`, `user_id`, `rule_id`, `event_par
 
 DROP TABLE IF EXISTS `events_async`;
 CREATE TABLE IF NOT EXISTS `events_async` (
-  `event_id` int(11) NOT NULL auto_increment,
+  `event_id` int(11) NOT NULL AUTO_INCREMENT,
   `trigger_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `rule_id` int(11) default NULL,
+  `rule_id` int(11) DEFAULT NULL,
   `event_param` text,
-  `event_status` int(11) NOT NULL default '0',
+  `event_status` int(11) NOT NULL DEFAULT '0',
   `last_updated` datetime NOT NULL,
-  PRIMARY KEY  (`event_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
-
---
--- Dumping data for table `events_async`
---
-
-INSERT INTO `events_async` (`event_id`, `trigger_id`, `user_id`, `rule_id`, `event_param`, `event_status`, `last_updated`) VALUES
-(16, 1, 1, NULL, '{"datetime":"Wed May 16 2012 02:05:14 GMT+0800 (SGT)"}', 32, '2012-05-16 02:05:20'),
-(15, 1, 1, NULL, NULL, 6, '2012-05-16 02:03:32'),
-(14, 1, 1, NULL, NULL, 6, '2012-05-16 01:57:52'),
-(13, 1, 1, NULL, NULL, 6, '2012-05-16 01:52:15');
+  PRIMARY KEY (`event_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -145,15 +135,15 @@ INSERT INTO `events_async` (`event_id`, `trigger_id`, `user_id`, `rule_id`, `eve
 
 DROP TABLE IF EXISTS `filters`;
 CREATE TABLE IF NOT EXISTS `filters` (
-  `filter_id` int(11) NOT NULL auto_increment,
-  `filter_enabled` tinyint(4) NOT NULL default '1',
+  `filter_id` int(11) NOT NULL AUTO_INCREMENT,
+  `filter_enabled` tinyint(4) NOT NULL DEFAULT '1',
   `module_id` int(11) NOT NULL,
   `filter_name` varchar(64) NOT NULL,
   `filter_alias` varchar(32) NOT NULL,
-  `filter_params` varchar(64) default NULL,
-  `filter_type` int(11) NOT NULL default '0' COMMENT '0: string, 1: number, 2: datetime',
+  `filter_params` varchar(64) DEFAULT NULL,
+  `filter_type` int(11) NOT NULL DEFAULT '0' COMMENT '0: string, 1: number, 2: datetime',
   `filter_description` text,
-  PRIMARY KEY  (`filter_id`)
+  PRIMARY KEY (`filter_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
 --
@@ -182,14 +172,14 @@ INSERT INTO `filters` (`filter_id`, `filter_enabled`, `module_id`, `filter_name`
 
 DROP TABLE IF EXISTS `modules`;
 CREATE TABLE IF NOT EXISTS `modules` (
-  `module_id` int(11) NOT NULL auto_increment,
-  `module_enabled` tinyint(4) NOT NULL default '1',
+  `module_id` int(11) NOT NULL AUTO_INCREMENT,
+  `module_enabled` tinyint(4) NOT NULL DEFAULT '1',
   `module_name` varchar(64) NOT NULL,
   `module_alias` varchar(64) NOT NULL,
-  `module_type` int(11) NOT NULL default '2' COMMENT '0: standalone, 1: hardware, 2: software api',
-  `module_role` int(11) NOT NULL default '0' COMMENT '0: triggers, 1: filters, 2: actions, 3: hybrid',
-  `module_description` varchar(128) default NULL,
-  PRIMARY KEY  (`module_id`)
+  `module_type` int(11) NOT NULL DEFAULT '2' COMMENT '0: standalone, 1: hardware, 2: software api',
+  `module_role` int(11) NOT NULL DEFAULT '0' COMMENT '0: triggers, 1: filters, 2: actions, 3: hybrid',
+  `module_description` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`module_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
@@ -218,13 +208,13 @@ INSERT INTO `modules` (`module_id`, `module_enabled`, `module_name`, `module_ali
 
 DROP TABLE IF EXISTS `preferences`;
 CREATE TABLE IF NOT EXISTS `preferences` (
-  `preference_id` int(11) NOT NULL auto_increment,
+  `preference_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `preference_name` varchar(255) NOT NULL,
   `preference_value` text NOT NULL,
-  `preference_description` varchar(255) default NULL,
+  `preference_description` varchar(255) DEFAULT NULL,
   `last_updated` datetime NOT NULL,
-  PRIMARY KEY  (`preference_id`)
+  PRIMARY KEY (`preference_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=92 ;
 
 --
@@ -257,7 +247,7 @@ INSERT INTO `preferences` (`preference_id`, `user_id`, `preference_name`, `prefe
 
 DROP TABLE IF EXISTS `rules`;
 CREATE TABLE IF NOT EXISTS `rules` (
-  `rule_id` int(11) NOT NULL auto_increment,
+  `rule_id` int(11) NOT NULL AUTO_INCREMENT,
   `trigger_id` int(11) NOT NULL,
   `trigger_param` text,
   `user_id` int(11) NOT NULL,
@@ -266,9 +256,9 @@ CREATE TABLE IF NOT EXISTS `rules` (
   `action_id` int(11) NOT NULL,
   `action_param` text,
   `rule_description` text,
-  `rule_enabled` tinyint(1) NOT NULL default '0',
+  `rule_enabled` tinyint(1) NOT NULL DEFAULT '0',
   `last_updated` datetime NOT NULL,
-  PRIMARY KEY  (`rule_id`)
+  PRIMARY KEY (`rule_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=44 ;
 
 --
@@ -299,17 +289,17 @@ INSERT INTO `rules` (`rule_id`, `trigger_id`, `trigger_param`, `user_id`, `filte
 
 DROP TABLE IF EXISTS `smtp`;
 CREATE TABLE IF NOT EXISTS `smtp` (
-  `smtp_config_id` int(11) NOT NULL auto_increment,
+  `smtp_config_id` int(11) NOT NULL AUTO_INCREMENT,
   `smtp_host` varchar(128) NOT NULL,
   `smtp_port` int(11) NOT NULL,
-  `smtp_secure` varchar(32) default NULL,
+  `smtp_secure` varchar(32) DEFAULT NULL,
   `smtp_name` varchar(128) NOT NULL,
   `smtp_from_email` varchar(128) NOT NULL,
   `smtp_username` varchar(128) NOT NULL,
   `smtp_password` varchar(128) NOT NULL,
-  `smtp_config_enable` tinyint(4) NOT NULL default '0',
+  `smtp_config_enable` tinyint(4) NOT NULL DEFAULT '0',
   `last_updated` datetime NOT NULL,
-  PRIMARY KEY  (`smtp_config_id`)
+  PRIMARY KEY (`smtp_config_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
@@ -328,14 +318,14 @@ INSERT INTO `smtp` (`smtp_config_id`, `smtp_host`, `smtp_port`, `smtp_secure`, `
 
 DROP TABLE IF EXISTS `triggers`;
 CREATE TABLE IF NOT EXISTS `triggers` (
-  `trigger_id` int(11) NOT NULL auto_increment,
-  `trigger_enabled` tinyint(4) NOT NULL default '1',
+  `trigger_id` int(11) NOT NULL AUTO_INCREMENT,
+  `trigger_enabled` tinyint(4) NOT NULL DEFAULT '1',
   `module_id` int(11) NOT NULL,
   `trigger_name` varchar(64) NOT NULL,
   `trigger_alias` varchar(32) NOT NULL,
-  `trigger_params` varchar(64) default NULL,
-  `trigger_description` varchar(256) default NULL,
-  PRIMARY KEY  (`trigger_id`)
+  `trigger_params` varchar(64) DEFAULT NULL,
+  `trigger_description` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`trigger_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=27 ;
 
 --
@@ -378,13 +368,13 @@ INSERT INTO `triggers` (`trigger_id`, `trigger_enabled`, `module_id`, `trigger_n
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
-  `user_id` int(11) NOT NULL auto_increment,
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_name` varchar(64) NOT NULL,
-  `user_email` varchar(64) default NULL,
-  `user_password` varchar(64) default NULL,
-  `user_memo` varchar(128) default NULL,
+  `user_email` varchar(64) DEFAULT NULL,
+  `user_password` varchar(64) DEFAULT NULL,
+  `user_memo` varchar(128) DEFAULT NULL,
   `last_updated` datetime NOT NULL,
-  PRIMARY KEY  (`user_id`)
+  PRIMARY KEY (`user_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
