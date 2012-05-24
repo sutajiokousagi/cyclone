@@ -1427,8 +1427,8 @@ CREATE TABLE IF NOT EXISTS `modules` (
 
 INSERT INTO `modules` (`module_id`, `module_enabled`, `module_name`, `module_alias`, `module_type`, `module_role`, `module_description`) VALUES
 (1, 1, 'Scheduler', 'scheduler', 0, 0, 'A module that generates triggers at user-defined schedule'),
-(2, 1, 'Twitter', 'twitter', 2, 3, 'A module that generates triggers based on user''s Twitter events'),
-(3, 1, 'Facebook', 'facebook', 2, 3, 'A module that generates triggers based on user''s Facebook events'),
+(2, 0, 'Twitter', 'twitter', 2, 3, 'A module that generates triggers based on user''s Twitter events'),
+(3, 0, 'Facebook', 'facebook', 2, 3, 'A module that generates triggers based on user''s Facebook events'),
 (4, 1, 'RSS', 'rss', 0, 0, 'A module that generates triggers based on content changes of an RSS feed'),
 (5, 1, 'HDMI', 'hdmi', 1, 0, 'A module that generates triggers based on HDMI hardware events'),
 (6, 1, 'Network', 'network', 1, 0, 'A module that generates triggers based on network hardware events'),
