@@ -20,8 +20,8 @@
 		//Connect to mysql
 		$link = @mysql_connect($DATABASE_HOST,"root",$DATABASE_PASS);
 		if (!$link) {
-			$link = @mysql_connect($DATABASE_HOST,"root",null);
-			mysql_select_db($DATABASE_NAME, $link);
+			$link = @mysql_connect($DATABASE_HOST,"root");
+			mysql_select_db("mysql", $link);
 			mysql_query("UPDATE user SET password=PASSWORD('" . $DATABASE_PASS . "') WHERE user='root' ", $link);
 			mysql_query("FLUSH PRIVILEGES", $link);
 			
