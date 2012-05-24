@@ -1546,8 +1546,8 @@ CREATE TABLE IF NOT EXISTS `smtp` (
 --
 
 INSERT INTO `smtp` (`smtp_config_id`, `smtp_host`, `smtp_port`, `smtp_secure`, `smtp_name`, `smtp_from_email`, `smtp_username`, `smtp_password`, `smtp_config_enable`, `last_updated`) VALUES
-(1, 'mail.toccostudios.com', 25, '.', 'Cyclone', 'ismu@smu.edu.sg', 'ismu@toccostudios.com', 'c7b9493b8cbbb795a6386c709ec77b5b', 0, '2012-02-23 13:18:17'),
-(5, 'smtp.gmail.com', 465, 'ssl', 'Cyclone', 'cyclone@gmail.com', 'torinnguyen@gmail.com', 'q1w2e3r4Q!W@E#R$', 1, '2012-04-05 03:03:17');
+(1, 'mail.torinnguyen.com', 587, '.', 'Cyclone', 'cyclone@torinnguyen.com', 'cyclone@torinnguyen.com', 'd46df44cfc456d22737f04166bb7ff01', 1, '2012-05-25 01:19:17'),
+(5, 'smtp.gmail.com', 465, 'ssl', 'Cyclone', 'cyclone@gmail.com', 'torinnguyen@gmail.com', 'q1w2e3r4Q!W@E#R$', 0, '2012-04-05 03:03:17');
 
 -- --------------------------------------------------------
 
