@@ -28,7 +28,7 @@ class trigger_hellotrigger extends baseclass_trigger
 	protected function trigger_by_alias($trigger_alias, $trigger_param_array, $rule_id)
 	{
 		//Temporarily disable
-		return null;
+		//return null;
 		
 		/*
 		 * This module contains only headless triggers, no param required
