@@ -521,6 +521,6 @@ function fOnReceivePutRule(jsonData)
 	$('#btn_add_rule').attr({src:"images/add.png"});
 	$('#panel_add_rule').hide('fast', function() {
 		//Refresh page
-		//location.reload(true);
+		location.reload(true);
 	});	
 }
