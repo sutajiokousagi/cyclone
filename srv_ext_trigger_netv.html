@@ -1,0 +1,126 @@
+<html>
+<head>
+	<title>Cyclone - Test location-based trigger</title>
+	<link rel="stylesheet" href="./css/cyclone_dark.css" type="text/css">
+	<script type='text/javascript' src='./js/jquery.min.js'></script>
+	<script type='text/javascript' src='./js/util_general.js'></script>
+	
+	<script type='text/javascript' charset="utf-8">
+
+		function fOnBodyLoad()  {
+			fConsoleLog("fOnBodyLoad()");
+			$('#btn_trigger_dio_on').click( function(){ fOnBtnDigitalOn($(this)) } );
+			$('#btn_trigger_dio_off').click( function(){ fOnBtnDigitalOff($(this)) } );
+			$('#btn_trigger_aio_change').click( function(){ fOnBtnAnalogChange($(this)) } );
+			$('#iframe').hide();
+		}
+
+		function fOnBtnDigitalOn(sender)
+		{
+			var channel = $('#trigger_id_dio_channel').val()
+			fTriggerDigital(channel, true);
+		}
+		function fOnBtnDigitalOff(sender)
+		{
+			var channel = $('#trigger_id_dio_channel').val()
+			fTriggerDigital(channel, false);
+		}
+		function fOnBtnAnalogChange(sender)
+		{
+			var channel = $('#trigger_id_aio_channel').val()
+			var previous = $('#trigger_id_aio_previous').val();
+			var current = $('#trigger_id_aio_current').val();
+			fTriggerAnalog(channel, previous, current);
+		}
+		
+		function fTriggerDigital(channel, isOn)
+		{
+			var user_id = $('#user_id').val();
+			var trigger_id = isOn ? $('#trigger_id_dio_on').val() : $('#trigger_id_dio_off').val();
+
+			//AJAX form submit
+			var parameters = new Array();
+			parameters['user_id'] = user_id;
+			parameters['trigger_id'] = trigger_id;
+			parameters['channel'] = channel;
+						
+			var parametersString = "";
+			for (var key in parameters)
+				parametersString += "&" + key + "=" + encodeURIComponent(parameters[key]);
+			parametersString = parametersString.substring(1);
+			fConsoleLog(parametersString);
+
+			$.ajax({
+				type: "POST",
+				url: "srv_ext_trigger.php",
+				data: parametersString,
+				success: fOnReceiveExtTrigger
+				});
+		}
+		
+		function fTriggerAnalog(channel, previous, current)
+		{
+			var user_id = $('#user_id').val();
+			var trigger_id = $('#trigger_id_aio_change').val();
+
+			//AJAX form submit
+			var parameters = new Array();
+			parameters['user_id'] = user_id;
+			parameters['trigger_id'] = trigger_id;
+			parameters['channel'] = channel;
+			parameters['previous'] = previous;
+			parameters['current'] = current;
+
+			var parametersString = "";
+			for (var key in parameters)
+				parametersString += "&" + key + "=" + encodeURIComponent(parameters[key]);
+			parametersString = parametersString.substring(1);
+			fConsoleLog(parametersString);
+
+			$.ajax({
+				type: "POST",
+				url: "srv_ext_trigger.php",
+				data: parametersString,
+				success: fOnReceiveExtTrigger
+				});
+		}
+		
+		function fOnReceiveExtTrigger(jsonData)
+		{
+			fConsoleLog(jsonData);
+			
+			if (!fValidateWebserviceOutput(jsonData))
+				return;
+			var ws_data = jsonData.ws_data;
+			
+			//Hide the submit button
+			$('#btn_trigger_dio_on').hide('fast', function() {	});
+			
+			$('#output').html(ws_data.response);
+			$('#output').show('fast', function() {	});
+			
+			alert("Triggered");
+		}
+		
+	</script>
+</head>
+<body onLoad="fOnBodyLoad();">
+
+	<form id='add_rule_form' action='#'>
+		<input type='hidden' name='user_id' id='user_id' value='1'>
+		<input type='hidden' name='trigger_id_dio_channel' id='trigger_id_dio_channel' value='0'>
+		<input type='hidden' name='trigger_id_dio_on' id='trigger_id_dio_on' value='27'>
+		<input type='hidden' name='trigger_id_dio_off' id='trigger_id_dio_off' value='28'>
+		
+		<input type='hidden' name='trigger_id_aio_channel' id='trigger_id_aio_channel' value='7'>
+		<input type='hidden' name='trigger_id_aio_change' id='trigger_id_aio_change' value='29'>
+		<input type='hidden' name='trigger_id_aio_previous' id='trigger_id_aio_previous' value='5'>
+		<input type='hidden' name='trigger_id_aio_current' id='trigger_id_aio_current' value='50'>
+	</form>
+	Trigger digital input channel 0 (ON) <img src='images/tick.png' id='btn_trigger_dio_on' class='img_button'><br/><br/>
+	Trigger digital input channel 0 (OFF) <img src='images/tick.png' id='btn_trigger_dio_off' class='img_button'><br/><br/>
+	Trigger analog input channel 7 <img src='images/tick.png' id='btn_trigger_aio_change' class='img_button'><br/><br/>
+	<div id='output' name='output' style='width:100%; height:300px; overflow:auto; background-color:#222222; border: 1px dashed #333333;'></div>
+
+</body>
+</html>

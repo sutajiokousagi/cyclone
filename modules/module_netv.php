@@ -16,6 +16,10 @@ class module_netv extends baseclass_hybrid
 	const MOTOR_FORWARD_ACTION_NAME = "motor_forward";
 	const MOTOR_BACKWARD_ACTION_NAME = "motor_backward";
 	
+	const DIGITAL_ON_TRIGGER_NAME = "digital_input_on";
+	const DIGITAL_OFF_TRIGGER_NAME = "digital_input_off";
+	const ANALOG_CHANGE_TRIGGER_NAME = "analog_input_change";
+	
 	/*
 	 * Override superclass to return my own version number
 	 */
@@ -237,7 +241,50 @@ class module_netv extends baseclass_hybrid
 		$firmware_ok = $this->setup_firmware();
 		if (!$firmware_ok)
 			return null;
-				
+			
+		/*
+		 * Implement all headless triggers above this line
+		 */
+		if ($trigger_param_array == null) {
+			echo "error: trigger_param is empty<br/>\n";
+			return null;
+		}
+		
+		if ($action_alias == self::DIGITAL_ON_TRIGGER_NAME)
+			return $this->trigger_digital_input($event_params_array, $action_params_array, true);
+		if ($action_alias == self::DIGITAL_OFF_TRIGGER_NAME)
+			return $this->trigger_digital_input($event_params_array, $action_params_array, false);
+		if ($action_alias == self::ANALOG_CHANGE_TRIGGER_NAME)
+			return $this->trigger_analog_input($event_params_array, $action_params_array);
+			
+		return null;
+	}
+	
+	protected function trigger_digital_input($trigger_alias, $trigger_param_array, $isOn)
+	{
+		$channel = null;
+		foreach ($trigger_param_array as $key => $value) {
+			if ($key == 'channel')		$channel = intval($value);
+		}
+		if ($channel === null)
+			return null;
+			
+		return null;
+	}
+	
+	protected function trigger_analog_input($trigger_alias, $trigger_param_array)
+	{
+		$channel = null;
+		$previous = null;
+		$current = null;
+		foreach ($trigger_param_array as $key => $value) {
+			if ($key == 'channel')		$channel = intval($value);
+			if ($key == 'previous')		$previous = intval($value);
+			if ($key == 'current')		$current = intval($value);
+		}
+		if ($channel === null || $previous === null || $current === null)
+			return null;
+		
 		return null;
 	}
 }
