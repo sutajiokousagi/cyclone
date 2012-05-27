@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 27, 2012 at 02:51 AM
+-- Generation Time: May 28, 2012 at 03:15 AM
 -- Server version: 5.1.40
 -- PHP Version: 5.2.13
 
@@ -324,7 +324,7 @@ CREATE TABLE IF NOT EXISTS `triggers` (
   `trigger_params` varchar(64) DEFAULT NULL,
   `trigger_description` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`trigger_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=27 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=30 ;
 
 --
 -- Dumping data for table `triggers`
@@ -356,7 +356,10 @@ INSERT INTO `triggers` (`trigger_id`, `trigger_enabled`, `module_id`, `trigger_n
 (23, 1, 11, 'enter location', 'enter_location', 'distance|longitude|latitude', 'Triggered when device''s location just enters the given range'),
 (24, 1, 11, 'leave location', 'leave_location', 'distance|longitude|latitude', 'Triggered when device''s location just leaves the given range'),
 (25, 1, 11, 'stays within a location for xxx minutes', 'within_location_minute', 'distance|longitude|latitude|minutes', 'Triggered as long as device''s location is within range for longer than given time'),
-(26, 1, 4, 'new RSS entry', 'rss_new', 'url', 'Triggered when there is a new entry in RSS feed');
+(26, 1, 4, 'new RSS entry', 'rss_new', 'url', 'Triggered when there is a new entry in RSS feed'),
+(27, 1, 12, 'digital input on', 'digital_input_on', 'channel', 'Triggered when a digital input channel is switched on'),
+(28, 1, 12, 'digital input off', 'digital_input_off', 'channel', 'Triggered when a digital input channel is switched on'),
+(29, 1, 12, 'analog input change', 'analog_input_change', 'channel|previous|current', 'Triggered when a analog input channel changed');
 
 -- --------------------------------------------------------
 
