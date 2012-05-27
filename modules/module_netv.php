@@ -26,13 +26,17 @@ class module_netv extends baseclass_hybrid
 	
 	protected function setup_firmware()
 	{
+		//New: let the daemon perform firmware setup,
+		//otherwise we have a lag for every trigger/action here
+		return true;
+		
 		//See documentation here: http://www.kosagi.com/blog/motor-controller-board/
 		
 		//Check already setup
 		$firmware_version = $this->get_shell_output("mot_ctl V");
 		if (strlen($firmware_version) < 10)
 			return true;
-			
+					
 		/* If success, board is connected, it should output these (268 characters)
 		// If failed, it will show more error messages
 		Setting 0xd420b1a8: 0x90000001 -> 0x90000001 ok
