@@ -385,7 +385,7 @@ class baseclass_trigger extends baseclass_module
 	 * $rule_id: optional if event is a global event
 	 * Return event_id if succeed, return 0 otherwise
 	 */
-	protected function addEventByTriggerAliasAndParam($trigger_alias, $event_param_json, $rule_id, $isAsync)
+	protected function addEventByTriggerAliasAndParam($trigger_alias, $event_param_json, $rule_id, $isAsync = false)
 	{
 		if (!isset($this->user_id) || $this->user_id == null || $this->user_id <= 0) {
 			echo "<strong>ERROR:</strong> cannot add new trigger to queue because user_id is invalid";

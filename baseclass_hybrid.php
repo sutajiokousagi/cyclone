@@ -389,7 +389,7 @@ class baseclass_hybrid extends baseclass_module
 	 * $rule_id: optional if event is a global event
 	 * Return event_id if succeed, return 0 otherwise
 	 */
-	protected function addEventByTriggerAliasAndParam($trigger_alias, $event_param_json, $rule_id)
+	protected function addEventByTriggerAliasAndParam($trigger_alias, $event_param_json, $rule_id, $isAsync = false)
 	{
 		if (!isset($this->user_id) || $this->user_id == null || $this->user_id <= 0) {
 			echo "<strong>ERROR:</strong> cannot add new trigger to queue because user_id is invalid";
@@ -405,7 +405,11 @@ class baseclass_hybrid extends baseclass_module
 		if (!isset($event_param_json))
 			$event_param_json = null;
 			
-		$event_id = func_addEvent($trigger_id, $this->user_id, $event_param_json, $rule_id);
+		if (!isset($isAsync) || $isAsync == false)
+			$event_id = func_addEvent($trigger_id, $this->user_id, $event_param_json, $rule_id);
+		else
+			$event_id = func_addAsyncEvent($trigger_id, $this->user_id, $event_param_json, $rule_id);
+		
 		if ($event_id == null || $event_id <= 0) {
 			echo "<strong>WARNING:</strong> failed to add new trigger to queue (event_id = $event_id)";
 			return 0;
