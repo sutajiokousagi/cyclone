@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Cyclone - Test location-based trigger</title>
+	<title>Cyclone - Test NeTV hardware triggers</title>
 	<link rel="stylesheet" href="./css/cyclone_dark.css" type="text/css">
 	<script type='text/javascript' src='./js/jquery.min.js'></script>
 	<script type='text/javascript' src='./js/util_general.js'></script>
@@ -17,19 +17,19 @@
 
 		function fOnBtnDigitalOn(sender)
 		{
-			var channel = $('#trigger_id_dio_channel').val()
+			var channel = $('#input_dio_channel').val()
 			fTriggerDigital(channel, true);
 		}
 		function fOnBtnDigitalOff(sender)
 		{
-			var channel = $('#trigger_id_dio_channel').val()
+			var channel = $('#input_dio_channel').val()
 			fTriggerDigital(channel, false);
 		}
 		function fOnBtnAnalogChange(sender)
 		{
-			var channel = $('#trigger_id_aio_channel').val()
-			var previous = $('#trigger_id_aio_previous').val();
-			var current = $('#trigger_id_aio_current').val();
+			var channel = $('#input_aio_channel').val()
+			var previous = $('#input_aio_previous').val();
+			var current = $('#input_aio_current').val();
 			fTriggerAnalog(channel, previous, current);
 		}
 		
@@ -93,8 +93,10 @@
 				return;
 			var ws_data = jsonData.ws_data;
 			
-			//Hide the submit button
-			$('#btn_trigger_dio_on').hide('fast', function() {	});
+			//Hide the submit buttons
+			//$('#btn_trigger_dio_on').hide('fast', function() {	});
+			//$('#btn_trigger_dio_off').hide('fast', function() {	});
+			//$('#btn_trigger_aio_change').hide('fast', function() {	});
 			
 			$('#output').html(ws_data.response);
 			$('#output').show('fast', function() {	});
@@ -108,14 +110,14 @@
 
 	<form id='add_rule_form' action='#'>
 		<input type='hidden' name='user_id' id='user_id' value='1'>
-		<input type='hidden' name='trigger_id_dio_channel' id='trigger_id_dio_channel' value='0'>
+		<input type='hidden' name='input_dio_channel' id='input_dio_channel' value='0'>
 		<input type='hidden' name='trigger_id_dio_on' id='trigger_id_dio_on' value='27'>
 		<input type='hidden' name='trigger_id_dio_off' id='trigger_id_dio_off' value='28'>
 		
-		<input type='hidden' name='trigger_id_aio_channel' id='trigger_id_aio_channel' value='7'>
+		<input type='hidden' name='input_aio_channel' id='input_aio_channel' value='7'>
 		<input type='hidden' name='trigger_id_aio_change' id='trigger_id_aio_change' value='29'>
-		<input type='hidden' name='trigger_id_aio_previous' id='trigger_id_aio_previous' value='5'>
-		<input type='hidden' name='trigger_id_aio_current' id='trigger_id_aio_current' value='50'>
+		<input type='hidden' name='input_aio_previous' id='input_aio_previous' value='5'>
+		<input type='hidden' name='input_aio_current' id='input_aio_current' value='50'>
 	</form>
 	Trigger digital input channel 0 (ON) <img src='images/tick.png' id='btn_trigger_dio_on' class='img_button'><br/><br/>
 	Trigger digital input channel 0 (OFF) <img src='images/tick.png' id='btn_trigger_dio_off' class='img_button'><br/><br/>

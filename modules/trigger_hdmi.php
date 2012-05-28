@@ -76,6 +76,7 @@ class trigger_hdmi extends baseclass_trigger
 				
 		if ($trigger_alias == self::CONNECT_TRIGGER_ALIAS || $trigger_alias == self::DISCONNECT_TRIGGER_ALIAS) {
 			//Add new event to global async event queue
+			$rule_id = 0;	//global
 			$event_id = $this->add_event_async($trigger_alias, $trigger_param_json, $rule_id);
 			return array($event_id);
 		}
