@@ -235,7 +235,7 @@ class module_netv extends baseclass_hybrid
 	 * Subclass to override this function and perform their magic
 	 * $rule_trigger_param is optional depending on the trigger implementation
 	 */
-	protected function trigger_by_alias($trigger_alias, $trigger_param_array, $rule_id)
+	protected function trigger_by_alias_external($trigger_alias, $trigger_param_array)
 	{	
 		//Setup NeTV motor firmware
 		$firmware_ok = $this->setup_firmware();
@@ -250,18 +250,19 @@ class module_netv extends baseclass_hybrid
 			return null;
 		}
 		
-		if ($action_alias == self::DIGITAL_ON_TRIGGER_NAME)
-			return $this->trigger_digital_input($event_params_array, $action_params_array, true);
-		if ($action_alias == self::DIGITAL_OFF_TRIGGER_NAME)
-			return $this->trigger_digital_input($event_params_array, $action_params_array, false);
-		if ($action_alias == self::ANALOG_CHANGE_TRIGGER_NAME)
-			return $this->trigger_analog_input($event_params_array, $action_params_array);
+		if ($trigger_alias == self::DIGITAL_ON_TRIGGER_NAME)
+			return $this->trigger_digital_input($trigger_alias, $trigger_param_array, true);
+		if ($trigger_alias == self::DIGITAL_OFF_TRIGGER_NAME)
+			return $this->trigger_digital_input($trigger_alias, $trigger_param_array, false);
+		if ($trigger_alias == self::ANALOG_CHANGE_TRIGGER_NAME)
+			return $this->trigger_analog_input($trigger_alias, $trigger_param_array);
 			
 		return null;
 	}
 	
 	protected function trigger_digital_input($trigger_alias, $trigger_param_array, $isOn)
 	{
+		//Validate parameters
 		$channel = null;
 		foreach ($trigger_param_array as $key => $value) {
 			if ($key == 'channel')		$channel = intval($value);
@@ -269,11 +270,16 @@ class module_netv extends baseclass_hybrid
 		if ($channel === null)
 			return null;
 			
-		return null;
+		//Add new event to global async event queue
+		$rule_id = 0;	//global
+		$trigger_param_json = json_encode($trigger_param_array);
+		$event_id = $this->add_event_async($trigger_alias, $trigger_param_json, $rule_id);
+		return array($event_id);
 	}
 	
 	protected function trigger_analog_input($trigger_alias, $trigger_param_array)
 	{
+		//Validate parameters
 		$channel = null;
 		$previous = null;
 		$current = null;
@@ -285,7 +291,11 @@ class module_netv extends baseclass_hybrid
 		if ($channel === null || $previous === null || $current === null)
 			return null;
 		
-		return null;
+		//Add new event to global async event queue
+		$rule_id = 0;	//global
+		$trigger_param_json = json_encode($trigger_param_array);
+		$event_id = $this->add_event_async($trigger_alias, $trigger_param_json, $rule_id);
+		return array($event_id);
 	}
 }
 
