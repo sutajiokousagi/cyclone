@@ -93,20 +93,19 @@
 	// Since this is most likely an async/hardware/global event, we should process the event immediately
 	
 	$cron_async_url = currentPageURL();
-	$cron_async_url = str_replace($_SERVER["REQUEST_URI"], '/cron_async.php', $cron_async_url);
-//	echo $cron_async_url;
+	$index = strrpos($cron_async_url, '/') + 1;
+	$path = substr($cron_async_url, 0, $index) ;
+	$cron_async_url = $path . 'cron_async.php';
 	
-	$ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $cron_async_url);
-    curl_setopt($ch, CURLOPT_HEADER, FALSE);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+	//This doesn't seem to work as normal, it returns raw PHP file instead
+	//$response = do_post_request($cron_async_url, null, null);		//correct path but gives error with url
+	//$response = do_post_request('cron_async.php', null, null);
+	
+	$response = get_shell_output("curl $cron_async_url");
 				
 	//--------------------------------------------------------
 	// Output
-		
+	
 	$output_array = array();
 	$count = count($queue_id_array);
 	$output_array['queue_count'] = $count;
@@ -116,7 +115,8 @@
 	func_outputArray($output_array);
 	
 	
-	
+
+
 	function currentPageURL()
 	{
 		$pageURL = 'http';
@@ -128,5 +128,33 @@
 			$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 		}
 		return $pageURL;
+	}
+	
+	// Replacement for curl because we don't have cURL extension installed
+	function do_post_request($url, $data, $optional_headers = null)
+	{
+  	  if ($data == null)
+		$data = array();
+	  $data = http_build_query($data);
+	
+	  $params = array('http' => array('method' => 'POST', 'content' => $data));
+	  if ($optional_headers !== null)
+	    $params['http']['header'] = $optional_headers;
+
+	  $ctx = stream_context_create($params);
+	  $fp = @fopen($url, 'rb', false, $ctx);
+	  if (!$fp)
+	    throw new Exception("Problem with $url, $php_errormsg");
+
+	  $response = @stream_get_contents($fp);
+	  if ($response === false)
+	    throw new Exception("Problem reading data from $url, $php_errormsg");
+
+	  return $response;
+	}
+	
+	function get_shell_output($cmd)
+	{
+		return shell_exec($cmd);
 	}
 ?>
