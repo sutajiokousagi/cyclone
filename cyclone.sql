@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 28, 2012 at 03:15 AM
+-- Generation Time: May 29, 2012 at 02:46 AM
 -- Server version: 5.1.40
 -- PHP Version: 5.2.13
 
@@ -47,15 +47,15 @@ CREATE TABLE IF NOT EXISTS `actions` (
 
 INSERT INTO `actions` (`action_id`, `action_enabled`, `module_id`, `action_name`, `action_alias`, `action_params`, `action_description`) VALUES
 (1, 1, 10, 'echo', 'echo', 'text', 'Print to the console environment where the  timer is executed'),
-(2, 1, 10, 'email', 'email', 'to|subject|message', 'Send an email to someone with a subject & a message'),
-(3, 1, 2, 'tweet', 'tweet', 'text', 'Post a tweet'),
-(4, 1, 3, 'update status', 'update_status', 'message|link', 'Update your Facebook status'),
-(5, 1, 12, 'switch on', 'digital_out_on', 'channel', 'Switch on a digital output channel'),
-(6, 1, 12, 'switch off', 'digital_out_off', 'channel', 'Switch off a digital output channel'),
+(2, 1, 10, 'send email', 'email', 'to|subject|message', 'Send an email to someone with a subject & a message'),
+(3, 1, 2, 'post a Tweet with', 'tweet', 'text', 'Post a tweet'),
+(4, 1, 3, 'update my Facebook status with', 'update_status', 'message|link', 'Update your Facebook status'),
+(5, 1, 12, 'switch ON digital output', 'digital_out_on', 'channel', 'Switch on a digital output channel'),
+(6, 1, 12, 'switch OFF digital output', 'digital_out_off', 'channel', 'Switch off a digital output channel'),
 (7, 1, 12, 'display text on LCD', 'lcd_text', 'text', 'Show a simple text on LCD'),
-(8, 1, 12, 'motor stop', 'motor_stop', 'channel', 'Stop a motor channel'),
-(9, 1, 12, 'motor forward', 'motor_forward', 'channel|speed', 'Set a motor channel to move forward with a given speed'),
-(10, 1, 12, 'motor backward', 'motor_backward', 'channel|speed', 'Set a motor channel to move backward with a given speed');
+(8, 1, 12, 'stop motor', 'motor_stop', 'channel', 'Stop a motor channel'),
+(9, 1, 12, 'move motor forward', 'motor_forward', 'channel|speed', 'Set a motor channel to move forward with a given speed'),
+(10, 1, 12, 'move motor backward', 'motor_backward', 'channel|speed', 'Set a motor channel to move backward with a given speed');
 
 -- --------------------------------------------------------
 
@@ -254,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `rules` (
   `rule_enabled` tinyint(1) NOT NULL DEFAULT '0',
   `last_updated` datetime NOT NULL,
   PRIMARY KEY (`rule_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=48 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=51 ;
 
 --
 -- Dumping data for table `rules`
@@ -276,8 +276,11 @@ INSERT INTO `rules` (`rule_id`, `trigger_id`, `trigger_param`, `user_id`, `filte
 (43, 1, NULL, 1, 0, NULL, 4, '{"message":"Testing: HDMI cable is connected","link":"http://cyclone.torinnguyen.com"}', 'Test Facebook module''s update status on HDMI module trigger', 1, '2012-05-16 01:51:34'),
 (44, 17, NULL, 1, 0, NULL, 5, '{"channel":"0"}', 'Test NeTV digital output on even minutes', 1, '2012-05-27 01:50:45'),
 (45, 18, NULL, 1, 0, NULL, 6, '{"channel":"0"}', 'Test NeTV digital output on odd minutes', 1, '2012-05-27 01:51:34'),
-(46, 17, NULL, 1, 0, NULL, 9, '{"channel":"3","speed":"100"}', 'Test NeTV motor control on even minutes', 1, '2012-05-27 01:50:45'),
-(47, 18, NULL, 1, 0, NULL, 8, '{"channel":"3"}', 'Test NeTV motor control on odd minutes', 1, '2012-05-27 01:51:34');
+(46, 17, NULL, 1, 0, NULL, 9, '{"channel":"3","speed":"50"}', 'Test NeTV motor control on even minutes', 1, '2012-05-27 01:50:45'),
+(47, 18, NULL, 1, 0, NULL, 8, '{"channel":"3"}', 'Test NeTV motor control on odd minutes', 1, '2012-05-27 01:51:34'),
+(48, 27, '{"channel":"1"}', 1, 0, NULL, 5, '{"channel":"3"}', NULL, 1, '2012-05-29 00:28:59'),
+(49, 28, '{"channel":"1"}', 1, 0, NULL, 6, '{"channel":"3"}', NULL, 1, '2012-05-29 00:29:15'),
+(50, 29, '{"channel":"4"}', 1, 0, NULL, 5, '{"channel":"2"}', NULL, 1, '2012-05-29 00:36:15');
 
 -- --------------------------------------------------------
 
@@ -331,35 +334,35 @@ CREATE TABLE IF NOT EXISTS `triggers` (
 --
 
 INSERT INTO `triggers` (`trigger_id`, `trigger_enabled`, `module_id`, `trigger_name`, `trigger_alias`, `trigger_params`, `trigger_description`) VALUES
-(1, 1, 5, 'connect', 'connect', 'datetime', 'Triggered when HDMI cable is plugged in'),
-(2, 1, 5, 'disconnect', 'disconnect', 'datetime', 'Triggered when HDMI cable is unplugged'),
-(3, 1, 5, 'resolution change', 'resolution_change', 'old_resolution|new_resolution', 'Triggered when HDMI input signal changes resolution'),
+(1, 1, 5, 'connect', 'connect', NULL, 'Triggered when HDMI cable is plugged in'),
+(2, 1, 5, 'disconnect', 'disconnect', NULL, 'Triggered when HDMI cable is unplugged'),
+(3, 1, 5, 'resolution change', 'resolution_change', NULL, 'Triggered when HDMI input signal changes resolution'),
 (4, 1, 6, 'connect', 'connect', NULL, 'Triggered when network got connected'),
 (5, 1, 6, 'disconnect', 'disconnect', NULL, 'Triggered when network is disconnected'),
 (6, 1, 6, 'change ip', 'change ip', NULL, 'Triggered when IP Address changes'),
-(7, 1, 7, 'new email', 'new email', 'from|subject|message', 'Triggered when a new email is received'),
+(7, 1, 7, 'new email', 'new email', 'from', 'Triggered when a new email is received'),
 (8, 1, 3, 'got tagged', 'got_tagged', NULL, 'Triggered when someone tagged out in a photo'),
 (9, 1, 3, 'status change', 'status_change', NULL, 'Triggered when your status changes'),
 (10, 1, 3, 'new post', 'new_post', NULL, 'Triggered when you post a new link post'),
 (11, 1, 3, 'upload new photo', 'upload_new_photo', NULL, 'Triggered when you upload a new photo'),
-(12, 1, 3, 'profile change', 'profile_change', NULL, 'Triggered when your profile changes'),
-(13, 1, 2, 'new tweet from you', 'new tweet from you', NULL, 'Triggered when you post a new tweet'),
-(14, 1, 2, 'new tweet from someone', 'new tweet from someone', 'screen_name', 'Triggered when a specific person post a new tweet'),
+(12, 1, 3, 'profile changed', 'profile_change', NULL, 'Triggered when your profile changes'),
+(13, 1, 2, 'new tweet from myself', 'new tweet from you', NULL, 'Triggered when you post a new tweet'),
+(14, 1, 2, 'new tweet from someone with', 'new tweet from someone', 'screen_name', 'Triggered when a specific person post a new tweet'),
 (15, 1, 2, 'new follower', 'new follower', NULL, 'Triggered when you have a new follower'),
 (16, 1, 2, 'mentioned', 'mentioned', NULL, 'Triggered when you are mentioned in a tweet'),
 (17, 1, 8, 'time is on even minute', 'even_minute', NULL, 'Triggered when the time is on even minutes'),
 (18, 1, 8, 'time is on odd minute', 'odd_minute', NULL, 'Triggered when the time is on odd minutes'),
-(19, 1, 1, 'daily', 'daily', 'time', 'Triggered daily at a specific time'),
-(20, 1, 1, 'weekly', 'weekly', 'days|time', 'Triggered weekly on a specific day and time'),
-(21, 1, 1, 'once', 'once', 'datetime', 'Triggered once on a specific date and time'),
+(19, 1, 1, 'daily at', 'daily', 'time', 'Triggered daily at a specific time'),
+(20, 1, 1, 'weekly on', 'weekly', 'days|time', 'Triggered weekly on a specific day and time'),
+(21, 1, 1, 'once at', 'once', 'datetime', 'Triggered once on a specific date and time'),
 (22, 1, 11, 'stays within location', 'within_location', 'distance|longitude|latitude', 'Triggered as long as device''s location is within range'),
 (23, 1, 11, 'enter location', 'enter_location', 'distance|longitude|latitude', 'Triggered when device''s location just enters the given range'),
 (24, 1, 11, 'leave location', 'leave_location', 'distance|longitude|latitude', 'Triggered when device''s location just leaves the given range'),
 (25, 1, 11, 'stays within a location for xxx minutes', 'within_location_minute', 'distance|longitude|latitude|minutes', 'Triggered as long as device''s location is within range for longer than given time'),
-(26, 1, 4, 'new RSS entry', 'rss_new', 'url', 'Triggered when there is a new entry in RSS feed'),
-(27, 1, 12, 'digital input on', 'digital_input_on', 'channel', 'Triggered when a digital input channel is switched on'),
-(28, 1, 12, 'digital input off', 'digital_input_off', 'channel', 'Triggered when a digital input channel is switched on'),
-(29, 1, 12, 'analog input change', 'analog_input_change', 'channel|previous|current', 'Triggered when a analog input channel changed');
+(26, 1, 4, 'new RSS entry from', 'rss_new', 'url', 'Triggered when there is a new entry in RSS feed'),
+(27, 1, 12, 'digital input is switched ON on', 'digital_input_on', 'channel', 'Triggered when a digital input channel is switched on'),
+(28, 1, 12, 'digital input is switched OFF on', 'digital_input_off', 'channel', 'Triggered when a digital input channel is switched on'),
+(29, 1, 12, 'analog input changed on', 'analog_input_change', 'channel', 'Triggered when a analog input channel changed');
 
 -- --------------------------------------------------------
 
