@@ -61,6 +61,7 @@ digital_in_count=${#DIGITAL_IN[@]}
 analog_in_count=${#ANALOG_IN[@]}
 echo "Number of digital input channels: $digital_in_count"
 echo "Number of analog input channels: $analog_in_count"
+user_id=1
 
 # ------------------------------------------------------------
 # Do Something
@@ -72,14 +73,21 @@ do
 # Digital channels
 
 index=0
+trigger_id=28
 while [ "$index" -lt "$digital_in_count" ]
 do
   current=`mot_ctl i $index`
   previous=${DIGITAL_IN[$index]}
   if [ ! -z "$previous" -a "$current" != "$previous" ]
   then
-    echo "digital $index : $previous -> $current"
+	if [ "$current" -gt 0 ]
+    then
+      trigger_id=27
+    fi
 	#fire external trigger to Cyclone PHP system
+    echo "digital $index : $previous -> $current"
+	//echo "curl -d 'user_id=${user_id}' -d 'trigger_id=${trigger_id}' -d 'channel=${index}' -d 'previous=${previous}' -d 'current=${current}' -s http://localhost/cyclone/srv_ext_trigger.php"
+	websrv=`curl -d 'user_id=${user_id}' -d 'trigger_id=${trigger_id}' -d 'channel=${index}' -d 'previous=${previous}' -d 'current=${current}' http://localhost/cyclone/srv_ext_trigger.php`
   fi
   DIGITAL_IN[$index]=$current
   ((index++))
@@ -88,6 +96,7 @@ done
 # Analog channels
 
 index=0
+trigger_id=29
 while [ "$index" -lt "$analog_in_count" ]
 do
   current=`mot_ctl a $index | cut -d "x" -f2 | tr '[a-z]' '[A-Z]' | (read hex; echo $(( 0x${hex} )))`	#clean up raw value & convert to decimal
@@ -98,8 +107,10 @@ do
     diff=`echo ${diff#-}`
     if [ "$diff" -gt 5 ]		# 2% of 255
 	then
-      echo "analog $index : $previous -> $current (diff: $diff)"
 	  #fire an external trigger to Cyclone PHP system
+      echo "analog $index : $previous -> $current (diff: $diff)"
+	  //echo "curl -d 'user_id=${user_id}' -d 'trigger_id=${trigger_id}' -d 'channel=${index}' -d 'previous=${previous}' -d 'current=${current}' http://localhost/cyclone/srv_ext_trigger.php"
+	  websrv=`curl -d 'user_id=${user_id}' -d 'trigger_id=${trigger_id}' -d 'channel=${index}' -d 'previous=${previous}' -d 'current=${current}' http://localhost/cyclone/srv_ext_trigger.php`
     fi
   fi
   ANALOG_IN[$index]=$current
