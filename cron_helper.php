@@ -1,5 +1,10 @@
 <?php
 
+	define("MODULE_ROLE_TRIGGER", 0);
+	define("MODULE_ROLE_FILTER", 1);
+	define("MODULE_ROLE_ACTION", 2);
+	define("MODULE_ROLE_HYBRID", 3);
+
 	/*
 	 * Return true if this module is already loaded
 	 */
@@ -31,9 +36,9 @@
 		$module_role = intval( $module_data_dictionary['module_role'] );
 		
 		$module_prefix = "module_";
-		if ($module_role == 0)			$module_prefix = "trigger_";
-		else if ($module_role == 1)		$module_prefix = "filter_";
-		else if ($module_role == 2)		$module_prefix = "action_";
+		if ($module_role == MODULE_ROLE_TRIGGER)		$module_prefix = "trigger_";
+		else if ($module_role == MODULE_ROLE_FILTER)	$module_prefix = "filter_";
+		else if ($module_role == MODULE_ROLE_ACTION)	$module_prefix = "action_";
 				
 		//check whether module source file exists
 		$module_class_name = $module_prefix . $module_alias;

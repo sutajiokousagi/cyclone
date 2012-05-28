@@ -120,7 +120,7 @@
 		$module_prefix = "module_";
 		if ($module_role == MODULE_ROLE_TRIGGER)		$module_prefix = "trigger_";
 		else if ($module_role == MODULE_ROLE_FILTER)	$module_prefix = "filter_";
-		else											$module_prefix = "action_";
+		else if ($module_role == MODULE_ROLE_ACTION)	$module_prefix = "action_";
 				
 		//check whether module source file exists
 		$module_class_name = $module_prefix . $module_alias;
