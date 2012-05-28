@@ -48,6 +48,13 @@
 - The module code supposes to perform their magic and push new events to (global) events table
 */
 
+	//In case something breaks in the future
+	/*
+	$index = strrpos(__FILE__, '/') + 1;
+	$path = substr(__FILE__, 0, $index);
+	chdir($path);
+	*/
+
 	//phase 1
 	require_once("util_users.php");
 	require_once("util_modules.php");
