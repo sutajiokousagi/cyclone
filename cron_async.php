@@ -204,6 +204,7 @@
 		$trigger_id = $one_queue['trigger_id'];
 		$trigger_rule_id = intval($one_queue['rule_id']);
 		$event_param = $one_queue['event_param'];
+		$event_param_array = json_decode($event_param);
 		$event_status = $one_queue['event_status'];
 		$last_updated = $one_queue['last_updated'];
 		
@@ -249,10 +250,40 @@
 		{
 			$rule_id = $one_rule['rule_id'];
 			$rule_trigger_id = $one_rule['trigger_id'];
+			$rule_trigger_param = $one_rule['trigger_param'];
+			$rule_trigger_param_array = json_decode($rule_trigger_param);
 			if ($rule_trigger_id != $trigger_id)
 				continue;
 			if ($trigger_rule_id != null && $trigger_rule_id != $rule_id)
 				continue;
+				
+			//event_param must contain ALL trigger_param (not the other way)
+			$matching_params = true;
+			if ($rule_trigger_param_array != null && count($rule_trigger_param_array) > 0)
+			{
+				foreach ($rule_trigger_param_array as $rule_trigger_param_name => $rule_trigger_param_value)
+				{
+					$found = false;
+					foreach ($event_param_array as $event_param_array_name => $event_param_array_value)
+					{
+						if ($rule_trigger_param_name != $event_param_array_name)
+							continue;
+						if ($rule_trigger_param_value != $event_param_array_value)
+							continue;
+						$found = true;
+						break;
+					}
+					if ($found)
+						continue;
+					$matching_params = false;
+					break;
+				}
+			}
+			
+			//Next rule
+			if (!$matching_params)
+				continue;
+				
 			$the_rule = $one_rule;
 			echo "            <span class='rule_status'>\n";
 			echo "                applying rule_id $rule_id... <br/>\n";
@@ -422,6 +453,16 @@
 			echo $pretty_end_string;
 					
 		} //end of for-loop for each rule
+		
+		//No rules set for this trigger (no rules matching event parameters), flag status as 'ignored. no rules'
+		if ($the_rule == null) {
+			func_updateAsyncEventStatus($event_id, $event_ignored_rule_status_status);
+			echo "            <span class='rule_status'>\n";
+			echo "                no rule to process this event. ignored. <br/>\n";
+			echo "            </span>\n";
+			echo $pretty_end_string;
+			continue;
+		}
 			
 	} //end of for-loop for event processing
 	echo "    </ul>\n";
