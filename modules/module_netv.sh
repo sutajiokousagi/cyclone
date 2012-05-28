@@ -73,21 +73,21 @@ do
 # Digital channels
 
 index=0
-trigger_id=28
 while [ "$index" -lt "$digital_in_count" ]
 do
   current=`mot_ctl i $index`
   previous=${DIGITAL_IN[$index]}
   if [ ! -z "$previous" -a "$current" != "$previous" ]
   then
+    trigger_id=28
 	if [ "$current" -gt 0 ]
     then
       trigger_id=27
     fi
 	#fire external trigger to Cyclone PHP system
     echo "digital $index : $previous -> $current"
-	//echo "curl -d 'user_id=${user_id}' -d 'trigger_id=${trigger_id}' -d 'channel=${index}' -d 'previous=${previous}' -d 'current=${current}' -s http://localhost/cyclone/srv_ext_trigger.php"
-	websrv=`curl -d 'user_id=${user_id}' -d 'trigger_id=${trigger_id}' -d 'channel=${index}' -d 'previous=${previous}' -d 'current=${current}' http://localhost/cyclone/srv_ext_trigger.php`
+	#echo "curl -d \"user_id=${user_id}&trigger_id=${trigger_id}&channel=${index}&previous=${previous}&current=${current}\" http://localhost/cyclone/srv_ext_trigger.php"
+	curl -d "user_id=${user_id}&trigger_id=${trigger_id}&channel=${index}&previous=${previous}&current=${current}" http://localhost/cyclone/srv_ext_trigger.php 1>/dev/null 2>&1 &
   fi
   DIGITAL_IN[$index]=$current
   ((index++))
@@ -96,7 +96,6 @@ done
 # Analog channels
 
 index=0
-trigger_id=29
 while [ "$index" -lt "$analog_in_count" ]
 do
   current=`mot_ctl a $index | cut -d "x" -f2 | tr '[a-z]' '[A-Z]' | (read hex; echo $(( 0x${hex} )))`	#clean up raw value & convert to decimal
@@ -108,9 +107,10 @@ do
     if [ "$diff" -gt 5 ]		# 2% of 255
 	then
 	  #fire an external trigger to Cyclone PHP system
+	  trigger_id=29
       echo "analog $index : $previous -> $current (diff: $diff)"
-	  //echo "curl -d 'user_id=${user_id}' -d 'trigger_id=${trigger_id}' -d 'channel=${index}' -d 'previous=${previous}' -d 'current=${current}' http://localhost/cyclone/srv_ext_trigger.php"
-	  websrv=`curl -d 'user_id=${user_id}' -d 'trigger_id=${trigger_id}' -d 'channel=${index}' -d 'previous=${previous}' -d 'current=${current}' http://localhost/cyclone/srv_ext_trigger.php`
+	  #echo "curl -d \"user_id=${user_id}&trigger_id=${trigger_id}&channel=${index}&previous=${previous}&current=${current}\" http://localhost/cyclone/srv_ext_trigger.php"
+	  curl -d "user_id=${user_id}&trigger_id=${trigger_id}&channel=${index}&previous=${previous}&current=${current}" http://localhost/cyclone/srv_ext_trigger.php 1>/dev/null 2>&1 &
     fi
   fi
   ANALOG_IN[$index]=$current
