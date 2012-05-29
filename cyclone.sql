@@ -101,13 +101,7 @@ CREATE TABLE IF NOT EXISTS `events` (
   `event_status` int(11) NOT NULL DEFAULT '0',
   `last_updated` datetime NOT NULL,
   PRIMARY KEY (`event_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `events`
---
-
--- No data required for this table
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -280,7 +274,7 @@ INSERT INTO `rules` (`rule_id`, `trigger_id`, `trigger_param`, `user_id`, `filte
 (47, 18, NULL, 1, 0, NULL, 8, '{"channel":"3"}', 'Test NeTV motor control on odd minutes', 1, '2012-05-27 01:51:34'),
 (48, 27, '{"channel":"1"}', 1, 0, NULL, 5, '{"channel":"3"}', NULL, 1, '2012-05-29 00:28:59'),
 (49, 28, '{"channel":"1"}', 1, 0, NULL, 6, '{"channel":"3"}', NULL, 1, '2012-05-29 00:29:15'),
-(50, 29, '{"channel":"4"}', 1, 0, NULL, 5, '{"channel":"2"}', NULL, 1, '2012-05-29 00:36:15');
+(50, 30, '{"channel":"4"}', 1, 0, NULL, 5, '{"channel":"2"}', NULL, 1, '2012-05-29 00:36:15');
 
 -- --------------------------------------------------------
 
@@ -327,7 +321,7 @@ CREATE TABLE IF NOT EXISTS `triggers` (
   `trigger_params` varchar(64) DEFAULT NULL,
   `trigger_description` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`trigger_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=30 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=31 ;
 
 --
 -- Dumping data for table `triggers`
@@ -362,7 +356,8 @@ INSERT INTO `triggers` (`trigger_id`, `trigger_enabled`, `module_id`, `trigger_n
 (26, 1, 4, 'new RSS entry from', 'rss_new', 'url', 'Triggered when there is a new entry in RSS feed'),
 (27, 1, 12, 'digital input is switched ON on', 'digital_input_on', 'channel', 'Triggered when a digital input channel is switched on'),
 (28, 1, 12, 'digital input is switched OFF on', 'digital_input_off', 'channel', 'Triggered when a digital input channel is switched on'),
-(29, 1, 12, 'analog input changed on', 'analog_input_change', 'channel', 'Triggered when a analog input channel changed');
+(29, 1, 12, 'digital input changed on', 'digital_input_change', 'channel', 'Triggered when digital input changed'),
+(30, 1, 12, 'analog input changed on', 'analog_input_change', 'channel', 'Triggered when analog input changed');
 
 -- --------------------------------------------------------
 
