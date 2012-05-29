@@ -55,12 +55,8 @@ done
 # ------------------------------------------------------------
 # Setup NeTV variables
 # ------------------------------------------------------------
-declare -a DIGITAL_IN=('' '' '' '' '' '' '' '');
-declare -a ANALOG_IN=('' '' '' '' '' '' '' '');
-digital_in_count=${#DIGITAL_IN[@]}
-analog_in_count=${#ANALOG_IN[@]}
-echo "Number of digital input channels: $digital_in_count"
-echo "Number of analog input channels: $analog_in_count"
+previous_digital_in=''
+previous_analog_in=''
 user_id=1
 
 # ------------------------------------------------------------
@@ -68,57 +64,38 @@ user_id=1
 # ------------------------------------------------------------
 while true
 do
-  #clear
-
 # Digital channels
+# More efficient to send all digital input values & let PHP module split it into more events
 
-index=0
-while [ "$index" -lt "$digital_in_count" ]
-do
-  current=`mot_ctl i $index`
-  previous=${DIGITAL_IN[$index]}
-  if [ ! -z "$previous" -a "$current" != "$previous" ]
-  then
-    trigger_id=28
-	if [ "$current" -gt 0 ]
-    then
-      trigger_id=27
-    fi
-	#fire external trigger to Cyclone PHP system
-    echo "digital $index : $previous -> $current"
-	#echo "curl -d \"user_id=${user_id}&trigger_id=${trigger_id}&channel=${index}&previous=${previous}&current=${current}\" http://localhost/cyclone/srv_ext_trigger.php"
-	curl -d "user_id=${user_id}&trigger_id=${trigger_id}&channel=${index}&previous=${previous}&current=${current}" http://localhost/cyclone/srv_ext_trigger.php 1>/dev/null 2>&1 &
-  fi
-  DIGITAL_IN[$index]=$current
-  ((index++))
-done
+#Eg: 0x20: 02
+current=`mot_ctl i | cut -d " " -f2 | (read hex; echo $(( 0x${hex} )))`
+if [ ! -z "$previous_digital_in" -a "$current" != "$previous_digital_in" ]
+then
+  trigger_id=29
+  #fire external trigger to Cyclone PHP system
+  echo "digital change : $previous_digital_in -> $current"
+  echo "curl -d \"user_id=${user_id}&trigger_id=${trigger_id}&previous=${previous_digital_in}&current=${current}\" http://localhost/cyclone/srv_ext_trigger.php"
+  curl -d "user_id=${user_id}&trigger_id=${trigger_id}&previous=${previous_digital_in}&current=${current}" http://localhost/cyclone/srv_ext_trigger.php 1>/dev/null 2>&1 &
+fi
+previous_digital_in=${current}
 
 # Analog channels
+# # More efficient to send all analog input values & let PHP module split it into more events
 
-index=0
-while [ "$index" -lt "$analog_in_count" ]
-do
-  current=`mot_ctl a $index | cut -d "x" -f2 | tr '[a-z]' '[A-Z]' | (read hex; echo $(( 0x${hex} )))`	#clean up raw value & convert to decimal
-  previous=${ANALOG_IN[$index]}
-  if [ ! -z "$previous" -a "$current" != "$previous" ]
-  then
-    diff=$(( $current - $previous ))
-    diff=`echo ${diff#-}`
-    if [ "$diff" -gt 5 ]		# 2% of 255
-	then
-	  #fire an external trigger to Cyclone PHP system
-	  trigger_id=29
-      echo "analog $index : $previous -> $current (diff: $diff)"
-	  #echo "curl -d \"user_id=${user_id}&trigger_id=${trigger_id}&channel=${index}&previous=${previous}&current=${current}\" http://localhost/cyclone/srv_ext_trigger.php"
-	  curl -d "user_id=${user_id}&trigger_id=${trigger_id}&channel=${index}&previous=${previous}&current=${current}" http://localhost/cyclone/srv_ext_trigger.php 1>/dev/null 2>&1 &
-    fi
-  fi
-  ANALOG_IN[$index]=$current
-  ((index++))
-done
+#current=`mot_ctl a $index | cut -d "x" -f2 | tr '[a-z]' '[A-Z]' | (read hex; echo $(( 0x${hex} )))`	#clean up raw value & convert to decimal
+current=`mot_ctl a | sed 's/ *$//g' | sed "s/0x//g" | sed "s/ /-/g"`
+if [ ! -z "$previous_analog_in" -a "$current" != "$previous_analog_in" ]
+then
+  #fire an external trigger to Cyclone PHP system
+  trigger_id=30
+  echo "analog change: $previous_analog_in -> $current"
+  #echo "curl -d \"user_id=${user_id}&trigger_id=${trigger_id}&previous=${previous_analog_in}&current=${current}" http://localhost/cyclone/srv_ext_trigger.php"
+  curl -d "user_id=${user_id}&trigger_id=${trigger_id}&previous=${previous_analog_in}&current=${current}" http://localhost/cyclone/srv_ext_trigger.php 1>/dev/null 2>&1 &
+fi
+previous_analog_in=${current}
 
 # End of while-loop
-sleep 5
+sleep 4
 done
 
 # ------------------------------------------------------------

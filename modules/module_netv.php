@@ -18,7 +18,11 @@ class module_netv extends baseclass_hybrid
 	
 	const DIGITAL_ON_TRIGGER_NAME = "digital_input_on";
 	const DIGITAL_OFF_TRIGGER_NAME = "digital_input_off";
+	const DIGITAL_CHANGE_TRIGGER_NAME = "digital_input_change";
 	const ANALOG_CHANGE_TRIGGER_NAME = "analog_input_change";
+	
+	const NUM_DIGITAL_INPUT = 8;
+	const NUM_ANALOG_INPUT = 8;
 	
 	/*
 	 * Override superclass to return my own version number
@@ -72,31 +76,6 @@ class module_netv extends baseclass_hybrid
 	{
 		return shell_exec($cmd);
 	}
-	
-	private function get_preference_name($prefix, $username)
-	{
-		$url = preg_replace("/[^a-zA-Z0-9s]/", "", $user);
-		$pref_name = "" . $this->module_id . "_previous_" . $prefix . "_" . $username;
-		return $pref_name;
-	}
-	
-	private function get_previous_array($prefix, $username)
-	{
-		//Get previous remembered feed entries & convert it to an associative array
-		$pref_name = $this->get_preference_name($prefix, $username);
-		$pref_value = func_getPreference($this->user_id, $pref_name);
-		$param_array = null;
-		if ($pref_value != null)
-			$param_array = json_decode(func_json_clean_param_string($pref_value), true);
-		return $param_array;
-	}
-	
-	private function save_new_array($prefix, $username, $current_array)
-	{
-		$pref_name = $this->get_preference_name($prefix, $username);
-		func_setPreference($this->user_id, $pref_name, json_encode($current_array));
-	}
-	
 	
 	//---------------------------------------------------------------------------------------------------
 	//---------------------------------------------------------------------------------------------------
@@ -249,18 +228,63 @@ class module_netv extends baseclass_hybrid
 			echo "error: trigger_param is empty<br/>\n";
 			return null;
 		}
-		
+					
+		if ($trigger_alias == self::DIGITAL_CHANGE_TRIGGER_NAME)
+			return $this->trigger_group_digital_input_change($trigger_alias, $trigger_param_array);
 		if ($trigger_alias == self::DIGITAL_ON_TRIGGER_NAME)
-			return $this->trigger_digital_input($trigger_alias, $trigger_param_array, true);
+			return $this->trigger_single_digital_input($trigger_alias, $trigger_param_array, true);
 		if ($trigger_alias == self::DIGITAL_OFF_TRIGGER_NAME)
-			return $this->trigger_digital_input($trigger_alias, $trigger_param_array, false);
+			return $this->trigger_single_digital_input($trigger_alias, $trigger_param_array, false);
 		if ($trigger_alias == self::ANALOG_CHANGE_TRIGGER_NAME)
-			return $this->trigger_analog_input($trigger_alias, $trigger_param_array);
+			return $this->trigger_group_analog_input($trigger_alias, $trigger_param_array);
 			
 		return null;
 	}
 	
-	protected function trigger_digital_input($trigger_alias, $trigger_param_array, $isOn)
+	protected function trigger_group_digital_input_change($trigger_alias, $trigger_param_array)
+	{
+
+		//Validate parameters
+		$current = null;
+		$previous = null;
+		foreach ($trigger_param_array as $key => $value) {
+			if ($key == 'previous')		$previous = intval($value);
+			if ($key == 'current')		$current = intval($value);
+		}
+		if ($current === null || $previous === null)
+			return null;
+		
+		//Add new event to global async event queue
+		$rule_id = 0;	//global
+		$event_ids = array();
+		
+		for ($index=0; $index<self::NUM_DIGITAL_INPUT; $index++)
+		{
+			$mask = 1 << $index;
+			$temp_previous = $previous & $mask;
+			$temp_current = $current & $mask;
+			if ($temp_previous == $temp_current)
+				continue;
+
+			$event_param_array = array();
+			$event_param_array['channel'] = $index;
+			$event_param_array['current'] = $temp_current;
+			$event_param_array['previous'] = $temp_previous;
+			$event_param_json = json_encode($event_param_array);
+			
+			//generic change event
+			$event_ids[] = $this->add_event_async($trigger_alias, $event_param_json, $rule_id);
+			
+			//specific change event
+			if ($temp_current == 0)
+				$event_ids[] = $this->add_event_async(self::DIGITAL_OFF_TRIGGER_NAME, $event_param_json, $rule_id);
+			else
+				$event_ids[] = $this->add_event_async(self::DIGITAL_ON_TRIGGER_NAME, $event_param_json, $rule_id);
+		}
+		return $event_ids;
+	}
+
+	protected function trigger_single_digital_input($trigger_alias, $trigger_param_array, $isOn)
 	{
 		//Validate parameters
 		$channel = null;
@@ -277,25 +301,46 @@ class module_netv extends baseclass_hybrid
 		return array($event_id);
 	}
 	
-	protected function trigger_analog_input($trigger_alias, $trigger_param_array)
+	protected function trigger_group_analog_input($trigger_alias, $trigger_param_array)
 	{
 		//Validate parameters
-		$channel = null;
-		$previous = null;
 		$current = null;
+		$previous = null;
 		foreach ($trigger_param_array as $key => $value) {
-			if ($key == 'channel')		$channel = intval($value);
-			if ($key == 'previous')		$previous = intval($value);
-			if ($key == 'current')		$current = intval($value);
+			if ($key == 'previous')		$previous = $value;
+			if ($key == 'current')		$current = $value;
 		}
-		if ($channel === null || $previous === null || $current === null)
+		if ($current === null || $previous === null)
 			return null;
-		
+			
 		//Add new event to global async event queue
 		$rule_id = 0;	//global
-		$trigger_param_json = json_encode($trigger_param_array);
-		$event_id = $this->add_event_async($trigger_alias, $trigger_param_json, $rule_id);
-		return array($event_id);
+		$event_ids = array();
+		$previous_array = explode("-", $previous);
+		$current_array = explode("-", $current);
+		
+		for ($index=0; $index<self::NUM_ANALOG_INPUT; $index++)
+		{
+			if ($previous_array[$index] == $current_array[$index])
+				continue;
+			$temp_current = hexdec($current_array[$index]);
+			$temp_previous = hexdec($previous_array[$index]);
+			$diff = abs($temp_current - $temp_previous);
+			if ($diff <= 13)		//%5 of 255
+				continue;
+				
+			$event_param_array = array();
+			$event_param_array['channel'] = $index;
+			$event_param_array['current'] = $temp_current;
+			$event_param_array['previous'] = $temp_previous;
+			$event_param_array['difference'] = $diff;
+			$event_param_json = json_encode($event_param_array);
+			
+			//generic change event
+			$event_ids[] = $this->add_event_async($trigger_alias, $event_param_json, $rule_id);
+		}
+		
+		return $event_ids;
 	}
 }
 
