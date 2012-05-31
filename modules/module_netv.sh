@@ -58,12 +58,17 @@ done
 previous_digital_in=''
 previous_analog_in=''
 user_id=1
+delay=1
 
 # ------------------------------------------------------------
 # Do Something
 # ------------------------------------------------------------
 while true
 do
+
+sleep ${delay}
+delay=1
+
 # Digital channels
 # More efficient to send all digital input values & let PHP module split it into more events
 
@@ -74,28 +79,65 @@ then
   trigger_id=29
   #fire external trigger to Cyclone PHP system
   echo "digital change : $previous_digital_in -> $current"
-  echo "curl -d \"user_id=${user_id}&trigger_id=${trigger_id}&previous=${previous_digital_in}&current=${current}\" http://localhost/cyclone/srv_ext_trigger.php"
+  #echo "curl -d \"user_id=${user_id}&trigger_id=${trigger_id}&previous=${previous_digital_in}&current=${current}\" http://localhost/cyclone/srv_ext_trigger.php"
   curl -d "user_id=${user_id}&trigger_id=${trigger_id}&previous=${previous_digital_in}&current=${current}" http://localhost/cyclone/srv_ext_trigger.php 1>/dev/null 2>&1 &
+  ((delay++))
 fi
 previous_digital_in=${current}
 
-# Analog channels
-# # More efficient to send all analog input values & let PHP module split it into more events
 
-#current=`mot_ctl a $index | cut -d "x" -f2 | tr '[a-z]' '[A-Z]' | (read hex; echo $(( 0x${hex} )))`	#clean up raw value & convert to decimal
+
+# Analog channels
+# More efficient to send all analog input values & let PHP module split it into more events
+
+#no change in all analog channels
 current=`mot_ctl a | sed 's/ *$//g' | sed "s/0x//g" | sed "s/ /-/g"`
-if [ ! -z "$previous_analog_in" -a "$current" != "$previous_analog_in" ]
+if [ -z "$previous_analog_in" -o "$current" == "$previous_analog_in" ]
 then
-  #fire an external trigger to Cyclone PHP system
-  trigger_id=30
-  echo "analog change: $previous_analog_in -> $current"
-  #echo "curl -d \"user_id=${user_id}&trigger_id=${trigger_id}&previous=${previous_analog_in}&current=${current}" http://localhost/cyclone/srv_ext_trigger.php"
-  curl -d "user_id=${user_id}&trigger_id=${trigger_id}&previous=${previous_analog_in}&current=${current}" http://localhost/cyclone/srv_ext_trigger.php 1>/dev/null 2>&1 &
+	previous_analog_in=${current}
+ 	continue;
 fi
+
+#echo "analog change: $previous_analog_in -> $current"
+trigger_id=30
+previous_array=(`echo $previous_analog_in | tr "-" "\n"`)
+current_array=(`echo $current | tr "-" "\n"`)
 previous_analog_in=${current}
 
+#detect amount of change in each channel
+index=0
+hasBigChange=0
+for temp_current in "${current_array[@]}"
+do
+	temp_current=`echo ${temp_current} | (read hex; echo $(( 0x${hex} )))`
+	temp_previous=${previous_array[$index]}
+	temp_previous=`echo ${temp_previous} | (read hex; echo $(( 0x${hex} )))`
+	((index++))
+		
+	diff=$(( $temp_current - $temp_previous ))
+    diff=`echo ${diff#-}`		#absolute value
+
+    if [ "$diff" -lt 25 ]		#10% of 255
+ 	then
+		continue;
+	fi
+	
+	hasBigChange=1
+	echo "analog ch #$(($index-1)): $temp_previous -> $temp_current [$diff]"
+	break;
+done
+
+#no big change in all analog channels
+if [ "$hasBigChange" -lt 1 ]
+then
+ 	continue;
+fi
+
+#echo "curl -d \"user_id=${user_id}&trigger_id=${trigger_id}&previous=${previous_analog_in}&current=${current}" http://localhost/cyclone/srv_ext_trigger.php"
+curl -d "user_id=${user_id}&trigger_id=${trigger_id}&previous=${previous_analog_in}&current=${current}" http://localhost/cyclone/srv_ext_trigger.php 1>/dev/null 2>&1 &
+((delay+=2))
+
 # End of while-loop
-sleep 4
 done
 
 # ------------------------------------------------------------
