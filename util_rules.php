@@ -96,4 +96,46 @@
 		return $entry_ID;
 	}
 	
+	//---------------------------------------------------------------------
+	// DELETE
+	//---------------------------------------------------------------------
+	
+	/*
+	 * Add a new rule
+	 * $rule_id: mandatory
+	 * $user_id: mandatory
+	 */
+	function func_deleteRule($user_id, $rule_id)
+	{
+		$table_name = "rules";
+		$input_names_array = array("user_id", "rule_id");
+		$input_values_array = array($user_id, $rule_id);
+		$numRows = func_deleteRecordsReturnNumAffected($table_name, $input_names_array, $input_values_array);
+		return ($numRows == 1) ? true : false;
+	}
+	
+	//---------------------------------------------------------------------
+	// MODIFY
+	//---------------------------------------------------------------------
+	
+	/*
+	 * Add a new rule
+	 * $rule_id: mandatory
+	 * $user_id: mandatory
+	 */
+	function func_enableRule($user_id, $rule_id, $enable)
+	{
+		$rule_enabled = $enable ? 1 : 0;
+		
+		$table_name = "rules";
+		$id_field_name = "rule_id";
+		$id_field_value = $rule_id;
+		$input_names_array = array("rule_enabled");
+		$input_values_array = array($rule_enabled);
+		$datetime_field_name = 'last_updated';
+		
+		$numRows = func_updateSingleRecordReturnNumAffected($table_name, $id_field_name, $id_field_value, $input_names_array, $input_values_array, $datetime_field_name);
+		
+		return ($numRows == 1) ? true : false;
+	}
 ?>

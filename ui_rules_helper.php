@@ -69,12 +69,27 @@
 		if ($ui_show_action_module_name)
 			echo " (" . formatted_name_string($action_module['module_name']) . "):";
 		echo display_param_string($action_module['action_name'], $action_param, ".<br/>\n");
-		
-		//Other configuration parameters
+				
+		//Enable/disable status
 		if ($rule_enabled != 0)		echo "      Enabled: <strong>Yes</strong><br/>\n";
 		else						echo "      Enabled: <strong>No</strong><br/>\n";
+		
+		//Description
 		if (strlen($rule_description) > 0)
 			echo "      Description: $rule_description<br/>\n";
+		
+		//Enable/disable button
+		if ($rule_enabled != 0)
+			echo '<a href="srv_en_rule.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '&rule_enable=0" class=\'cssbutton\'>disable</a> ';
+		else
+			echo '<a href="srv_en_rule.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '&rule_enable=1" class=\'cssbutton\'>enable</a> ';
+			
+		//Edit button
+		//echo '<a href="xxx.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '&rule_enable=1" class=\'cssbutton\'>edit</a> ';
+		echo '<a href="#" class=\'cssbutton\'>edit</a> ';
+				
+		//Eelete button
+		echo '<a href="srv_del_rule.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '" class=\'cssbutton\'>delete</a> ';
 		
 		echo $pretty_end_string;
 	}
@@ -121,7 +136,7 @@
 		if (func_endsWith($return_string, ','))
 			$return_string = substr($return_string,0,-1);
 		$return_string .= $end_string;
-			
+				
 		return rtrim($return_string);
 	}
 ?>
