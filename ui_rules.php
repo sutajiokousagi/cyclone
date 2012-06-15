@@ -1,9 +1,15 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 	<title>Cyclone - Rules</title>
-	<link rel="stylesheet" href="./css/cyclone_dark.css" type="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link type="text/css" rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
+	<link type="text/css" rel="stylesheet" href="./css/cyclone_dark.css">
 	<script type='text/javascript' src='./js/jquery.min.js'></script>
 	<script type='text/javascript' src='./js/jquery.json.min.js'></script>
+	<script type='text/javascript' src='./bootstrap/js/bootstrap.min.js'></script>
+	<script type='text/javascript' src='./bootstrap/js/bootstrap-button.js'></script>
+	<script type='text/javascript' src='./bootstrap/js/bootstrap-tooltip.js'></script>
 	<script type='text/javascript' src='./js/util_general.js'></script>
 	<script type='text/javascript' src='./js/rules.js' charset="utf-8"></script>
 </head>

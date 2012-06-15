@@ -80,16 +80,16 @@
 		
 		//Enable/disable button
 		if ($rule_enabled != 0)
-			echo '<a href="srv_en_rule.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '&rule_enable=0" class=\'cssbutton\'>disable</a> ';
+			echo '<a href="srv_en_rule.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '&rule_enable=0" class=\'btn btn-warning\'>disable</a> ';
 		else
-			echo '<a href="srv_en_rule.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '&rule_enable=1" class=\'cssbutton\'>enable</a> ';
+			echo '<a href="srv_en_rule.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '&rule_enable=1" class=\'btn btn-success\'>enable</a> ';
 			
 		//Edit button
-		//echo '<a href="xxx.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '&rule_enable=1" class=\'cssbutton\'>edit</a> ';
-		echo '<a href="#" class=\'cssbutton\'>edit</a> ';
+		//echo '<a href="xxx.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '&rule_enable=1" class=\'btn btn-info\'>edit</a> ';
+		echo '<a href="#" class=\'btn btn-info\'>edit</a> ';
 				
 		//Eelete button
-		echo '<a href="srv_del_rule.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '" class=\'cssbutton\'>delete</a> ';
+		echo '<a href="srv_del_rule.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '" class=\'btn btn-danger\'>delete</a> ';
 		
 		echo $pretty_end_string;
 	}
