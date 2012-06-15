@@ -160,12 +160,38 @@ function fSelectTriggerID(trigger_id)
 		$('#trigger_parameter_wrapper').fadeOut('fast', function() {   $('#trigger_parameter_wrapper').html('');  });
 		return;
 	}
-	
+
 	//Construct HTML elements for the parameters
 	var html_string = "";
 	for(var i=0; i<paramsArray.length; i++)
 		html_string += paramsArray[i] + "<input type='text' id='trigger_param_" + paramsArray[i] + "' class='styled-text-input'>\n";
 	
+	//Special NeTV digital ON trigger, for testing at the moment
+	if (trigger_id == 27)
+	{
+		html_string = paramsArray[0] + "<input type='hidden' id='trigger_param_" + paramsArray[0] + "' > \n";
+		html_string += " \
+		<div class='btn-group' data-toggle='buttons-radio'> \n\
+			<button onClick='fOnBtnParam(0)' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_0'>0</button> \n\
+			<button onClick='fOnBtnParam(1)' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_1'>1</button> \n\
+			<button onClick='fOnBtnParam(2)' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_2'>2</button> \n\
+			<button onClick='fOnBtnParam(3)' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_3'>3</button> \n\
+			<button onClick='fOnBtnParam(4)' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_4'>4</button> \n\
+			<button onClick='fOnBtnParam(5)' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_5'>5</button> \n\
+			<button onClick='fOnBtnParam(6)' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_6'>6</button> \n\
+			<button onClick='fOnBtnParam(7)' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_7'>7</button> \n\
+		</div> \n\
+		\n\
+		<script> \n\
+			fOnBtnParam( 0 ); \n\
+			$('#trigger_param_" + paramsArray[0] + "_0').button('toggle'); \n\
+			function fOnBtnParam(newValue) { \n\
+				$('#trigger_param_" + paramsArray[0] + "').val( newValue ); \n\
+				console.log('channel ' + newValue + ' selected'); \n\
+			} \n\
+		</script>";
+	}
+
 	$('#trigger_parameter_wrapper').fadeOut('fast', function() {   
 		$('#trigger_parameter_wrapper').html(html_string);
 		$('#trigger_parameter_wrapper').fadeIn('fast', function() {   /* animation complete */  });
