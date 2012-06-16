@@ -93,7 +93,92 @@ function fOnActionSelectorChanged(sender)
 
 
 // -------------------------------------------------------------------------------------------------
-//	Trigger/Triggers
+//	Rules
+// -------------------------------------------------------------------------------------------------
+
+function fOnBtnEnableRule(rule_id, rule_enable)
+{
+	//AJAX form submit
+	var parameters = new Array();
+	parameters['user_id'] = user_id;
+	parameters['rule_id'] = rule_id;
+	parameters['rule_enable'] = rule_enable;
+	
+	//convert parameters to URL encoded string
+	var parametersString = "";
+	for (var key in parameters)
+		parametersString += "&" + key + "=" + encodeURIComponent(parameters[key]);
+	parametersString = parametersString.substring(1);
+	fConsoleLog(parametersString);
+
+	$.ajax({
+		type: "POST",
+		url: "srv_en_rule.php",
+		data: parametersString,
+		success: fOnReceiveEnableRule
+		});
+}
+
+function fOnBtnDeleteRule(rule_id)
+{
+	var answer = confirm ("Are you sure?")
+	if (!answer)
+		return;
+
+	//AJAX form submit
+	var parameters = new Array();
+	parameters['user_id'] = user_id;
+	parameters['rule_id'] = rule_id;
+	
+	//convert parameters to URL encoded string
+	var parametersString = "";
+	for (var key in parameters)
+		parametersString += "&" + key + "=" + encodeURIComponent(parameters[key]);
+	parametersString = parametersString.substring(1);
+	fConsoleLog(parametersString);
+
+	$.ajax({
+		type: "POST",
+		url: "srv_del_rule.php",
+		data: parametersString,
+		success: fOnReceiveDeleteRule
+		});
+}
+
+function fOnBtnEditRule(rule_id)
+{
+
+}
+
+function fOnReceiveEnableRule(jsonData)
+{
+	fConsoleLog(jsonData);
+	
+	if (!fValidateWebserviceOutput(jsonData))
+		return;
+	
+	//Refresh page
+	location.reload(true);
+}
+
+function fOnReceiveDeleteRule(jsonData)
+{
+	fConsoleLog(jsonData);
+	
+	if (!fValidateWebserviceOutput(jsonData))
+		return;
+	var ws_data = jsonData.ws_data;
+	var rule_id = ws_data.rule_id;
+	
+	//Remove the rule from UI
+	$('#rule_wrapper_' + rule_id).hide('medium', function() {
+    	$('#rule_wrapper_' + rule_id).remove();
+  	});
+}
+
+
+// -------------------------------------------------------------------------------------------------
+//	Triggers
 // -------------------------------------------------------------------------------------------------
 
 function fSelectTriggerModuleID(trigger_module_id)

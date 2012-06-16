@@ -33,9 +33,9 @@
 	if (isset($_POST['rule_id']))		$rule_id = $_POST['rule_id'];
 	if (isset($_GET['rule_id']))		$rule_id = $_GET['rule_id'];
 
-	$rule_id = func_deleteRule($user_id, $rule_id);
+	$success = func_deleteRule($user_id, $rule_id);
 	
-	if (!$rule_id)
+	if (!$success)
 		func_dieWithMessage("error deleting rule");
 		
 	$output_array = array();

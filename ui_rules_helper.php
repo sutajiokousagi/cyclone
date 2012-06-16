@@ -24,7 +24,7 @@
 		$rule_description = $one_rule['rule_description'];
 		
 		$pretty_end_string = "    </li>\n";
-		echo "    <li>\n";
+		echo "    <li id='rule_wrapper_" . $rule_id . "'>\n";
 		
 		//Trigger module
 		$trigger_module = func_getModuleByTriggerID( $trigger_id );
@@ -80,16 +80,15 @@
 		
 		//Enable/disable button
 		if ($rule_enabled != 0)
-			echo '<a href="srv_en_rule.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '&rule_enable=0" class=\'btn btn-warning\'>disable</a> ';
+			echo '<button onclick="fOnBtnEnableRule(' . $rule_id . ',0);" class=\'btn btn-warning\'>disable</button> ';
 		else
-			echo '<a href="srv_en_rule.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '&rule_enable=1" class=\'btn btn-success\'>enable</a> ';
+			echo '<button onclick="fOnBtnEnableRule(' . $rule_id . ',1);" class=\'btn btn-success\'>enable</button> ';
 			
 		//Edit button
-		//echo '<a href="xxx.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '&rule_enable=1" class=\'btn btn-info\'>edit</a> ';
-		echo '<a href="#" class=\'btn btn-info\'>edit</a> ';
+		echo '<button onclick="fOnBtnEditRule(' . $rule_id . ');" class=\'btn btn-info\'>edit</button> ';
 				
-		//Eelete button
-		echo '<a href="srv_del_rule.php?user_id=' . $user_id . '&rule_id=' . $rule_id . '" class=\'btn btn-danger\'>delete</a> ';
+		//Delete button
+		echo '<button onclick="fOnBtnDeleteRule(' . $rule_id . ');" class=\'btn btn-danger\'>delete</button> ';
 		
 		echo $pretty_end_string;
 	}

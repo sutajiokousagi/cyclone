@@ -8,7 +8,9 @@
 	
 	$input_parameters = array('user_id','rule_id', 'rule_enable');
 
-	//validation
+	//--------------------------------------------------------
+	//Validation
+
 	$error_input_parameters = array();
 	foreach ($input_parameters as $input_name)
 	{
@@ -25,7 +27,8 @@
 		func_dieWithMessage( join(", ", $error_input_parameters) . " is/are required");
 		
 	//--------------------------------------------------------
-	
+	// Variables
+
 	$user_id = null;
 	$rule_id = null;
 	$rule_enable = null;
@@ -39,11 +42,13 @@
 	if ($rule_enable)		$rule_enable = true;
 	else 					$rule_enable = false;
 	
-	$rule_id = func_enableRule($user_id, $rule_id, $rule_enable);
+	//--------------------------------------------------------
 	
-	if (!$rule_id)
+	$success = func_enableRule($user_id, $rule_id, $rule_enable);
+	
+	if (!$success)
 		func_dieWithMessage("error enabling rule");
-		
+	
 	$output_array = array();
 	$output_array['rule_id'] = $rule_id;
 	$output_array['rule_enable'] = $rule_enable;
