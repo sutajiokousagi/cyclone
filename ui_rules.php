@@ -85,7 +85,6 @@
 	echo "  <!------------------------>\n";
 	echo "  <img src='images/add.png' id='btn_add_rule' class='img_button'>Add a new rule<br/>\n";
 	echo "  <div id='panel_add_rule' style='display:none;'>\n";
-	echo "  <form id='add_rule_form' action=''>\n";
 	echo "    <input type='hidden' name='user_id' id='user_id' value='$user_id'>\n\n";
 
 	//-----------------------------------------------------------
@@ -215,7 +214,6 @@
 	echo "      </div>\n";
 	echo "    </div>\n\n";
 	
-	echo "  </form>\n";
 	echo "  </div><br/>\n\n";
 	
 ?>
