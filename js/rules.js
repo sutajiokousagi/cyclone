@@ -164,8 +164,6 @@ function fSelectTriggerID(trigger_id)
 		return;
 	}
 
-	fConsoleLog(paramsUI);
-
 	//For conveninent testing of UI code
 	/*
 	if (trigger_id >= 27 && trigger_id <= 30)
@@ -201,8 +199,13 @@ function fSelectTriggerID(trigger_id)
 		else
 			html_string += paramsArray[i] + "<input type='text' id='trigger_param_" + paramsArray[i] + "' class='styled-text-input'>\n";
 	}
-	if (paramsUI != null)
+	if (paramsUI != null) {
+		fConsoleLog("custom UI code length: " + paramsUI.length);
 		html_string += paramsUI;
+	}
+	else {
+		fConsoleLog("no custom UI code for this trigger");
+	}
 
 	$('#trigger_parameter_wrapper').fadeOut('fast', function() {   
 		$('#trigger_parameter_wrapper').html(html_string);
