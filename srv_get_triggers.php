@@ -10,7 +10,8 @@
 	require_once("cron_helper.php");
 
 	//--------------------------------------------------------
-	
+	// Validation
+
 	$user_id = null;
 	$module_id = null;
 	$module_alias = null;
@@ -27,22 +28,18 @@
 		func_dieWithMessage("module_id or module_alias is required");
 
 	//--------------------------------------------------------
+	// Load module code
 
 	$module_sql = null;
 	$config_sql = null;
 	$modules_array = array();
 	$configs_array = array();
 
-	if ($module_id != null) {
-		$triggers_sql = func_getTriggersByModuleID( $module_id );
+	if ($module_id != null)
 		$module_sql = func_getModuleByID( $module_id );
-	}
-
-	else if ($module_alias != null) {
-		$triggers_sql = func_getTriggersByModuleAlias( $module_alias );
+	else if ($module_alias != null)
 		$module_sql = func_getModuleByAlias( $module_alias );
-	}
-
+	
 	//Basic module data	
 	$module_id = $module_sql['module_id'];
 	$module_name = $module_sql['module_name'];
@@ -51,7 +48,6 @@
 	//User configs
 	$config_sql = func_getConfigsByModuleIDAndUserID( $module_id );
 	$configs_array[$module_id] = $config_sql;
-
 
 	//Load the module
 	$module_loaded = load_module( $module_sql, false );
@@ -62,8 +58,12 @@
 	$one_module = $modules_array[$module_id];
 	$module_object = $one_module['module_object'];
 
-	$outputArray = array();
+	//--------------------------------------------------------
+	// Get trigger UI code
 
+	$outputArray = array();
+	$triggers_sql = func_getTriggersByModuleID( $module_id );
+	
 	//For each trigger, get its UI code
 	while ($one_trigger = mysql_fetch_assoc($triggers_sql))
 	{
@@ -75,6 +75,7 @@
 	}
 	
 	//--------------------------------------------------------
+	// Output
 
 	func_outputArray( $outputArray );
 

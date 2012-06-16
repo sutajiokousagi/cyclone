@@ -356,19 +356,19 @@ class module_netv extends baseclass_hybrid
 			$html_string =
 <<<END_OF_STRING_IDENTIFIER
 				<div class='btn-group' data-toggle='buttons-radio'>
-					<button onclick='fOnTriggerParam(0);' class='btn btn-primary' id='trigger_param_channel_0'>0</button>
-					<button onclick='fOnTriggerParam(1);' class='btn btn-primary' id='trigger_param_channel_1'>1</button>
-					<button onclick='fOnTriggerParam(2);' class='btn btn-primary' id='trigger_param_channel_2'>2</button>
-					<button onclick='fOnTriggerParam(3);' class='btn btn-primary' id='trigger_param_channel_3'>3</button>
-					<button onclick='fOnTriggerParam(4);' class='btn btn-primary' id='trigger_param_channel_4'>4</button>
-					<button onclick='fOnTriggerParam(5);' class='btn btn-primary' id='trigger_param_channel_5'>5</button>
-					<button onclick='fOnTriggerParam(6);' class='btn btn-primary' id='trigger_param_channel_6'>6</button>
-					<button onclick='fOnTriggerParam(7);' class='btn btn-primary' id='trigger_param_channel_7'>7</button>
+					<button onclick='fOnTriggerParamChannel(0);' class='btn btn-primary' id='trigger_param_channel_0'>0</button>
+					<button onclick='fOnTriggerParamChannel(1);' class='btn btn-primary' id='trigger_param_channel_1'>1</button>
+					<button onclick='fOnTriggerParamChannel(2);' class='btn btn-primary' id='trigger_param_channel_2'>2</button>
+					<button onclick='fOnTriggerParamChannel(3);' class='btn btn-primary' id='trigger_param_channel_3'>3</button>
+					<button onclick='fOnTriggerParamChannel(4);' class='btn btn-primary' id='trigger_param_channel_4'>4</button>
+					<button onclick='fOnTriggerParamChannel(5);' class='btn btn-primary' id='trigger_param_channel_5'>5</button>
+					<button onclick='fOnTriggerParamChannel(6);' class='btn btn-primary' id='trigger_param_channel_6'>6</button>
+					<button onclick='fOnTriggerParamChannel(7);' class='btn btn-primary' id='trigger_param_channel_7'>7</button>
 				</div>
 				<script>
-					fOnTriggerParam( 0 );
+					fOnTriggerParamChannel( 0 );
 					$('#trigger_param_channel_0').button('toggle');
-					function fOnTriggerParam(newValue) {
+					function fOnTriggerParamChannel(newValue) {
 						$('#trigger_param_channel').val( newValue );
 						console.log('channel ' + newValue + ' selected');
 					}
@@ -386,6 +386,58 @@ END_OF_STRING_IDENTIFIER;
 	 */
 	public function getUICodeForActionAlias($action_alias)
 	{
+		if ($action_alias == self::DIGITAL_OUT_ON_ACTION_NAME
+			|| $action_alias == self::DIGITAL_OUT_OFF_ACTION_NAME)
+		{
+			$html_string =
+<<<END_OF_STRING_IDENTIFIER
+				<div class='btn-group' data-toggle='buttons-radio'>
+					<button onclick='fOnActionParamChannel(0);' class='btn btn-primary' id='action_param_channel_0'>0</button>
+					<button onclick='fOnActionParamChannel(1);' class='btn btn-primary' id='action_param_channel_1'>1</button>
+					<button onclick='fOnActionParamChannel(2);' class='btn btn-primary' id='action_param_channel_2'>2</button>
+					<button onclick='fOnActionParamChannel(3);' class='btn btn-primary' id='action_param_channel_3'>3</button>
+					<button onclick='fOnActionParamChannel(4);' class='btn btn-primary' id='action_param_channel_4'>4</button>
+					<button onclick='fOnActionParamChannel(5);' class='btn btn-primary' id='action_param_channel_5'>5</button>
+					<button onclick='fOnActionParamChannel(6);' class='btn btn-primary' id='action_param_channel_6'>6</button>
+					<button onclick='fOnActionParamChannel(7);' class='btn btn-primary' id='action_param_channel_7'>7</button>
+				</div>
+				<script>
+					fOnActionParamChannel( 0 );
+					$('#action_param_channel_0').button('toggle');
+					function fOnActionParamChannel(newValue) {
+						$('#trigger_param_channel').val( newValue );
+						console.log('channel ' + newValue + ' selected');
+					}
+				</script>
+END_OF_STRING_IDENTIFIER;
+
+			return $html_string;
+		}
+
+		if ($action_alias == self::MOTOR_STOP_ACTION_NAME
+			|| $action_alias == self::MOTOR_FORWARD_ACTION_NAME
+			|| $action_alias == self::MOTOR_BACKWARD_ACTION_NAME)
+		{
+			$html_string =
+<<<END_OF_STRING_IDENTIFIER
+				<div class='btn-group' data-toggle='buttons-radio'>
+					<button onclick='fOnActionParamChannel(1);' class='btn btn-primary' id='action_param_channel_1'>1</button>
+					<button onclick='fOnActionParamChannel(2);' class='btn btn-primary' id='action_param_channel_2'>2</button>
+					<button onclick='fOnActionParamChannel(3);' class='btn btn-primary' id='action_param_channel_3'>3</button>
+					<button onclick='fOnActionParamChannel(4);' class='btn btn-primary' id='action_param_channel_4'>4</button>
+				</div>
+				<script>
+					fOnActionParamChannel( 1 );
+					$('#trigger_param_channel_1').button('toggle');
+					function fOnActionParamChannel(newValue) {
+						$('#trigger_param_channel').val( newValue );
+						console.log('motor channel ' + newValue + ' selected');
+					}
+				</script>
+END_OF_STRING_IDENTIFIER;
+
+			return $html_string;
+		}
 		
 		return "";
 	}

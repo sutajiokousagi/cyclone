@@ -20,6 +20,22 @@
 		$condition = "module_id = '" . $id . "' AND action_enabled = 1";
 		return func_getMultiRowFromTable("actions", $condition);
 	}
+
+	/*
+	 * Returns all actions can be performed by a given module, returns raw SQL result
+	 * This is more expensive than func_getActionsByModuleID
+	 */
+	function func_getActionsByModuleAlias($alias)
+	{
+		require_once("util_modules.php");
+		$the_module = func_getModuleByAlias($alias);
+		if ($the_module == null)
+			return null;
+		$module_id = $the_module['module_id'];
+		if ($module_id == null || $module_id <= 0 || $module_id == "")
+			return null;
+		return func_getActionsByModuleID($module_id);
+	}
 	
 	/*
 	 * Returns all actions that has the given name from all modules, returns raw SQL result

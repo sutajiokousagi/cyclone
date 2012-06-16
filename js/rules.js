@@ -200,7 +200,7 @@ function fSelectTriggerID(trigger_id)
 			html_string += paramsArray[i] + "<input type='text' id='trigger_param_" + paramsArray[i] + "' class='styled-text-input'>\n";
 	}
 	if (paramsUI != null) {
-		fConsoleLog("custom UI code length: " + paramsUI.length);
+		fConsoleLog("custom trigger UI code length: " + paramsUI.length);
 		html_string += paramsUI;
 	}
 	else {
@@ -459,6 +459,7 @@ function fSelectActionID(action_id)
 {
 	fConsoleLog("action_id selected: " + action_id);
 	paramsArray = fGetActionParams(action_id)
+	paramsUI = fGetActionUI(action_id);
 		
 	//No parameters
 	if (paramsArray == null) {
@@ -469,8 +470,19 @@ function fSelectActionID(action_id)
 	
 	//Construct HTML elements for the parameters
 	var html_string = "";
-	for(var i=0; i<paramsArray.length; i++)
-		html_string += paramsArray[i] + "<input type='text' id='action_param_" + paramsArray[i] + "' class='styled-text-input'>\n";
+	for (var i=0; i<paramsArray.length; i++) {
+		if (paramsUI != null)
+			html_string += paramsArray[i] + "<input type='hidden' id='action_param_" + paramsArray[i] + "'>\n";
+		else
+			html_string += paramsArray[i] + "<input type='text' id='action_param_" + paramsArray[i] + "' class='styled-text-input'>\n";
+	}
+	if (paramsUI != null) {
+		fConsoleLog("custom action UI code length: " + paramsUI.length);
+		html_string += paramsUI;
+	}
+	else {
+		fConsoleLog("no custom UI code for this action");
+	}
 	
 	$('#action_parameter_wrapper').fadeOut('fast', function() {   
 		$('#action_parameter_wrapper').html(html_string);
@@ -516,7 +528,7 @@ function fGetActionParamsJSON(action_id)
 	return params_json;
 }
 
-function fGetFilterUI(action_id)
+function fGetActionUI(action_id)
 {
 	var one_data = actions_data[""+action_id];
 	
