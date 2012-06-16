@@ -42,6 +42,12 @@
 	{
 		return func_getModulesByRole(1);
 	}
+
+	function func_getModuleByID($module_id)
+	{
+		$condition = "module_id = '" . $module_id . "' AND module_enabled = 1";
+		return func_getSingleRowFromTable("modules", $condition);
+	}
 	
 	function func_getModuleByAlias($module_alias)
 	{

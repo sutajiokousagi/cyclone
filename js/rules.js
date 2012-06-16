@@ -2,6 +2,7 @@
 //	data storage
 // -------------------------------------------------------------------------------------------------
 
+var user_id = null;
 var triggers_data = null;
 var filters_data = null;
 var actions_data = null;
@@ -9,8 +10,9 @@ var actions_data = null;
 // -------------------------------------------------------------------------------------------------
 //	window.onload function
 // -------------------------------------------------------------------------------------------------
-function fOnBodyLoad()  {
-	fConsoleLog("fOnBodyLoad()");
+function fOnBodyLoad(usr_id)  {
+	user_id = usr_id;
+	fConsoleLog("fOnBodyLoad(" + user_id + ");");
 	
 	$('#btn_show_rules').click( function(){ fOnBtnShowRules($(this)) } );
 	$('#btn_add_rule').click( function(){ fOnBtnAddRule($(this)) } );
@@ -112,7 +114,7 @@ function fSelectTriggerModuleID(trigger_module_id)
 
 function fLoadTriggersForModuleID(trigger_module_id)
 {
-	var url = 'srv_get_triggers.php?module_id='+trigger_module_id;
+	var url = 'srv_get_triggers.php?user_id=' + user_id + '&module_id=' + trigger_module_id;
 	$.getJSON(url, function(data){ fOnReceiveTriggersForModuleID(trigger_module_id, data) } );
 }
 
@@ -154,6 +156,7 @@ function fSelectTriggerID(trigger_id)
 {
 	fConsoleLog("trigger_id selected: " + trigger_id);
 	paramsArray = fGetTriggerParams(trigger_id);
+	paramsUI = fGetTriggerUI(trigger_id);
 		
 	//No parameters
 	if (paramsArray == null) {
@@ -161,16 +164,13 @@ function fSelectTriggerID(trigger_id)
 		return;
 	}
 
-	//Construct HTML elements for the parameters
-	var html_string = "";
-	for(var i=0; i<paramsArray.length; i++)
-		html_string += paramsArray[i] + "<input type='text' id='trigger_param_" + paramsArray[i] + "' class='styled-text-input'>\n";
-	
-	//Special NeTV digital ON trigger, for testing at the moment
-	if (trigger_id == 27 || trigger_id == 28 || trigger_id == 29)
+	fConsoleLog(paramsUI);
+
+	//For conveninent testing of UI code
+	/*
+	if (trigger_id >= 27 && trigger_id <= 30)
 	{
-		html_string = paramsArray[0] + "<input type='hidden' id='trigger_param_" + paramsArray[0] + "' > \n";
-		html_string += " \
+		paramsUI = " \
 		<div class='btn-group' data-toggle='buttons-radio'> \n\
 			<button onclick='fOnTriggerParam(0);' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_0'>0</button> \n\
 			<button onclick='fOnTriggerParam(1);' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_1'>1</button> \n\
@@ -191,6 +191,18 @@ function fSelectTriggerID(trigger_id)
 			} \n\
 		</script>";
 	}
+	*/
+
+	//Construct HTML elements for the parameters
+	var html_string = "";
+	for (var i=0; i<paramsArray.length; i++) {
+		if (paramsUI != null)
+			html_string += paramsArray[i] + "<input type='hidden' id='trigger_param_" + paramsArray[i] + "'>\n";
+		else
+			html_string += paramsArray[i] + "<input type='text' id='trigger_param_" + paramsArray[i] + "' class='styled-text-input'>\n";
+	}
+	if (paramsUI != null)
+		html_string += paramsUI;
 
 	$('#trigger_parameter_wrapper').fadeOut('fast', function() {   
 		$('#trigger_parameter_wrapper').html(html_string);
@@ -235,6 +247,16 @@ function fGetTriggerParamsJSON(trigger_id)
 	return params_json;
 }
 
+function fGetTriggerUI(trigger_id)
+{
+	var one_data = triggers_data[""+trigger_id];
+	
+	var trigger_ui = one_data['trigger_ui'];
+	if (trigger_ui == null || trigger_ui.length <= 5)
+		return null;
+		
+	return trigger_ui;
+}
 
 // -------------------------------------------------------------------------------------------------
 //	Filters
@@ -263,7 +285,7 @@ function fSelectFilterModuleID(filter_module_id)
 
 function fLoadFiltersForModuleID(filter_module_id)
 {
-	var url = 'srv_get_filters.php?module_id='+filter_module_id;
+	var url = 'srv_get_filters.php?user_id=' + user_id + '&module_id='+filter_module_id;
 	$.getJSON(url, function(data){ fOnReceiveFiltersForModuleID(filter_module_id, data) } );
 }
 
@@ -363,6 +385,16 @@ function fGetFilterParamsJSON(filter_id)
 	return params_json;
 }
 
+function fGetFilterUI(filter_id)
+{
+	var one_data = filters_data[""+filter_id];
+	
+	var filter_ui = one_data['filter_ui'];
+	if (filter_ui == null || filter_ui.length <= 5)
+		return null;
+		
+	return filter_ui;
+}
 
 // -------------------------------------------------------------------------------------------------
 //	Actions
@@ -382,7 +414,7 @@ function fSelectActionModuleID(action_module_id)
 
 function fLoadActionsForModuleID(action_module_id)
 {
-	var url = 'srv_get_actions.php?module_id='+action_module_id;
+	var url = 'srv_get_actions.php?user_id=' + user_id + '&module_id=' + action_module_id;
 	$.getJSON(url, function(data){ fOnReceiveActionsForModuleID(action_module_id, data) } );
 }
 
@@ -479,6 +511,17 @@ function fGetActionParamsJSON(action_id)
 	var params_json = $.toJSON( paramsObject );		//jQuery JSON plugin
 
 	return params_json;
+}
+
+function fGetFilterUI(action_id)
+{
+	var one_data = actions_data[""+action_id];
+	
+	var action_ui = one_data['action_ui'];
+	if (action_ui == null || action_ui.length <= 5)
+		return null;
+		
+	return action_ui;
 }
 
 // -------------------------------------------------------------------------------------------------

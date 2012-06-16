@@ -13,7 +13,6 @@
 	<script type='text/javascript' src='./js/util_general.js'></script>
 	<script type='text/javascript' src='./js/rules.js' charset="utf-8"></script>
 </head>
-<body onLoad="fOnBodyLoad();">
 
 <?php
 /*
@@ -35,20 +34,27 @@
 	$input_user_name = "ACD49441-44BA-6D95-84B4-E6E3AF40CC84";
 	$input_user_password = "";
 	$md5_user_password = ($input_user_password == "") ? "" : md5($input_user_password);
-	echo "  User: $input_user_name<br/><br/>\n\n";
 	
 	//-----------------------------------------------------------
 	// Obtain a 'user_id' to be used throughout the session
 	
 	$user_id = func_authorizeUser($input_user_name, $md5_user_password);
 	if ($user_id <= 0) {
+		echo "  User: $input_user_name<br/><br/>\n\n";
 		echo "  Authorization failed. Halt.<br/>\n";
 		die();
 	}
+?>
+
+<body onLoad='fOnBodyLoad( <?php echo $user_id; ?> );'>
+
+<?php
+	
+	echo "  User: $input_user_name<br/><br/>\n\n";
 	
 	//Testing user preference
 	$refresh_interval = func_getPreference($user_id ,"refresh_interval");
-	echo "  Testing key-value pair: refresh_interval = $refresh_interval<br/><br/>\n\n";
+	//echo "  Testing key-value pair: refresh_interval = $refresh_interval<br/><br/>\n\n";
 	
 	//-----------------------------------------------------------
 	// Retrieve user's rules

@@ -353,26 +353,28 @@ class module_netv extends baseclass_hybrid
 			|| $trigger_alias == self::DIGITAL_OFF_TRIGGER_NAME
 			|| $trigger_alias == self::ANALOG_CHANGE_TRIGGER_NAME)
 		{
-			$html_string = " \
-			<div class='btn-group' data-toggle='buttons-radio'> \n\
-				<button onclick='fOnTriggerParam(0);' class='btn btn-primary' id='trigger_param_channel_0'>0</button> \n\
-				<button onclick='fOnTriggerParam(1);' class='btn btn-primary' id='trigger_param_channel_1'>1</button> \n\
-				<button onclick='fOnTriggerParam(2);' class='btn btn-primary' id='trigger_param_channel_2'>2</button> \n\
-				<button onclick='fOnTriggerParam(3);' class='btn btn-primary' id='trigger_param_channel_3'>3</button> \n\
-				<button onclick='fOnTriggerParam(4);' class='btn btn-primary' id='trigger_param_channel_4'>4</button> \n\
-				<button onclick='fOnTriggerParam(5);' class='btn btn-primary' id='trigger_param_channel_5'>5</button> \n\
-				<button onclick='fOnTriggerParam(6);' class='btn btn-primary' id='trigger_param_channel_6'>6</button> \n\
-				<button onclick='fOnTriggerParam(7);' class='btn btn-primary' id='trigger_param_channel_7'>7</button> \n\
-			</div> \n\
-			\n\
-			<script> \n\
-				fOnTriggerParam( 0 ); \n\
-				$('#trigger_param_channel_0').button('toggle'); \n\
-				function fOnTriggerParam(newValue) { \n\
-					$('#trigger_param_channel').val( newValue ); \n\
-					console.log('channel ' + newValue + ' selected'); \n\
-				} \n\
-			</script>";
+			$html_string =
+<<<END_OF_STRING_IDENTIFIER
+				<div class='btn-group' data-toggle='buttons-radio'>
+					<button onclick='fOnTriggerParam(0);' class='btn btn-primary' id='trigger_param_channel_0'>0</button>
+					<button onclick='fOnTriggerParam(1);' class='btn btn-primary' id='trigger_param_channel_1'>1</button>
+					<button onclick='fOnTriggerParam(2);' class='btn btn-primary' id='trigger_param_channel_2'>2</button>
+					<button onclick='fOnTriggerParam(3);' class='btn btn-primary' id='trigger_param_channel_3'>3</button>
+					<button onclick='fOnTriggerParam(4);' class='btn btn-primary' id='trigger_param_channel_4'>4</button>
+					<button onclick='fOnTriggerParam(5);' class='btn btn-primary' id='trigger_param_channel_5'>5</button>
+					<button onclick='fOnTriggerParam(6);' class='btn btn-primary' id='trigger_param_channel_6'>6</button>
+					<button onclick='fOnTriggerParam(7);' class='btn btn-primary' id='trigger_param_channel_7'>7</button>
+				</div>
+				<script>
+					fOnTriggerParam( 0 );
+					$('#trigger_param_channel_0').button('toggle');
+					function fOnTriggerParam(newValue) {
+						$('#trigger_param_channel').val( newValue );
+						console.log('channel ' + newValue + ' selected');
+					}
+				</script>;
+END_OF_STRING_IDENTIFIER;
+
 			return $html_string;
 		}
 		
