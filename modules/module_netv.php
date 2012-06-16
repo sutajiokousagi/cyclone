@@ -372,7 +372,7 @@ class module_netv extends baseclass_hybrid
 						$('#trigger_param_channel').val( newValue );
 						console.log('channel ' + newValue + ' selected');
 					}
-				</script>;
+				</script>
 END_OF_STRING_IDENTIFIER;
 
 			return $html_string;
