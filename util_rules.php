@@ -125,7 +125,7 @@
 	 */
 	function func_enableRule($user_id, $rule_id, $enable)
 	{
-		$rule_enabled = $enable ? 1 : 0;
+		$rule_enabled = $enable ? "1" : "0";
 		
 		$table_name = "rules";
 		$id_field_name = "rule_id";

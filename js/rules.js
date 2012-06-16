@@ -102,7 +102,7 @@ function fOnBtnEnableRule(rule_id, rule_enable)
 	var parameters = new Array();
 	parameters['user_id'] = user_id;
 	parameters['rule_id'] = rule_id;
-	parameters['rule_enable'] = rule_enable;
+	parameters['rule_enabled'] = rule_enable;
 	
 	//convert parameters to URL encoded string
 	var parametersString = "";
