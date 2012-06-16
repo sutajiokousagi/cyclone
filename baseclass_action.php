@@ -125,6 +125,15 @@ class baseclass_action extends baseclass_module
 			return null;
 		return $this->actions_array[$action_id]['action_alias'];
 	}
+	
+	/*
+	 * Return JavaScript code for given action alias
+	 */
+	public function getUICodeForActionAlias($action_alias)
+	{
+		//Subclass to override this function
+		return "";
+	}
 }
 
 ?>

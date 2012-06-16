@@ -548,6 +548,24 @@ class baseclass_hybrid extends baseclass_module
 		if (!isset($this->actions_array[$action_id]['action_alias']))	//verify valid action object
 			return null;
 		return $this->actions_array[$action_id]['action_alias'];
+	}	
+	
+	/*
+	 * Return JavaScript code for given trigger alias
+	 */
+	public function getUICodeForTriggerAlias($trigger_alias)
+	{
+		//Subclass to override this function
+		return "";
+	}
+	
+	/*
+	 * Return JavaScript code for given action alias
+	 */
+	public function getUICodeForActionAlias($action_alias)
+	{
+		//Subclass to override this function
+		return "";
 	}
 }
 

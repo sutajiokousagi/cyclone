@@ -427,6 +427,15 @@ class baseclass_trigger extends baseclass_module
 		echo "triggered by $trigger_alias (Id: $trigger_id, $trigger_description) <br/>\n";
 		echo "added to trigger queue with event_id = $event_id <br/>\n";
 	}
+	
+	/*
+	 * Return JavaScript code for given trigger alias
+	 */
+	public function getUICodeForTriggerAlias($trigger_alias)
+	{
+		//Subclass to override this function
+		return "";
+	}
 }
 
 ?>
