@@ -249,38 +249,11 @@ function fSelectTriggerID(trigger_id)
 		return;
 	}
 
-	//For conveninent testing of UI code
-	/*
-	if (trigger_id >= 27 && trigger_id <= 30)
-	{
-		paramsUI = " \
-		<div class='btn-group' data-toggle='buttons-radio'> \n\
-			<button onclick='fOnTriggerParam(0);' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_0'>0</button> \n\
-			<button onclick='fOnTriggerParam(1);' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_1'>1</button> \n\
-			<button onclick='fOnTriggerParam(2);' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_2'>2</button> \n\
-			<button onclick='fOnTriggerParam(3);' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_3'>3</button> \n\
-			<button onclick='fOnTriggerParam(4);' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_4'>4</button> \n\
-			<button onclick='fOnTriggerParam(5);' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_5'>5</button> \n\
-			<button onclick='fOnTriggerParam(6);' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_6'>6</button> \n\
-			<button onclick='fOnTriggerParam(7);' class='btn btn-primary' id='trigger_param_" + paramsArray[0] + "_7'>7</button> \n\
-		</div> \n\
-		\n\
-		<script> \n\
-			fOnTriggerParam( 0 ); \n\
-			$('#trigger_param_" + paramsArray[0] + "_0').button('toggle'); \n\
-			function fOnTriggerParam(newValue) { \n\
-				$('#trigger_param_" + paramsArray[0] + "').val( newValue ); \n\
-				console.log('channel ' + newValue + ' selected'); \n\
-			} \n\
-		</script>";
-	}
-	*/
-
 	//Construct HTML elements for the parameters
 	var html_string = "";
 	for (var i=0; i<paramsArray.length; i++) {
 		if (paramsUI != null)
-			html_string += paramsArray[i] + "<input type='hidden' id='trigger_param_" + paramsArray[i] + "'>\n";
+			html_string += "<input type='hidden' id='trigger_param_" + paramsArray[i] + "'>\n";
 		else
 			html_string += paramsArray[i] + "<input type='text' id='trigger_param_" + paramsArray[i] + "' class='styled-text-input'>\n";
 	}
@@ -337,6 +310,8 @@ function fGetTriggerParamsJSON(trigger_id)
 
 function fGetTriggerUI(trigger_id)
 {
+	if (triggers_data == null)
+		return null;
 	var one_data = triggers_data[""+trigger_id];
 	
 	var trigger_ui = one_data['trigger_ui'];
@@ -415,17 +390,29 @@ function fSelectFilterID(filter_id)
 {
 	fConsoleLog("filter_id selected: " + filter_id);
 	paramsArray = fGetFilterParams(filter_id);
+	paramsUI = fGetFilterUI(filter_id);
 		
 	//No parameters
 	if (paramsArray == null) {
 		$('#filter_parameter_wrapper').fadeOut('fast', function() {   $('#filter_parameter_wrapper').html('');  });
 		return;
 	}
-	
+
 	//Construct HTML elements for the parameters
 	var html_string = "";
-	for(var i=0; i<paramsArray.length; i++)
-		html_string += paramsArray[i] + "<input type='text' id='filter_param_" + paramsArray[i] + "' class='styled-text-input'>\n";
+	for (var i=0; i<paramsArray.length; i++) {
+		if (paramsUI != null)
+			html_string += "<input type='hidden' id='action_param_" + paramsArray[i] + "'>\n";
+		else
+			html_string += paramsArray[i] + "<input type='text' id='filter_param_" + paramsArray[i] + "' class='styled-text-input'>\n";
+	}
+	if (paramsUI != null) {
+		fConsoleLog("custom filter UI code length: " + paramsUI.length);
+		html_string += paramsUI;
+	}
+	else {
+		fConsoleLog("no custom UI code for this filter");
+	}
 	
 	$('#filter_parameter_wrapper').fadeOut('fast', function() {   
 		$('#filter_parameter_wrapper').html(html_string);
@@ -475,6 +462,8 @@ function fGetFilterParamsJSON(filter_id)
 
 function fGetFilterUI(filter_id)
 {
+	if (filters_data == null)
+		return null;
 	var one_data = filters_data[""+filter_id];
 	
 	var filter_ui = one_data['filter_ui'];
@@ -557,7 +546,7 @@ function fSelectActionID(action_id)
 	var html_string = "";
 	for (var i=0; i<paramsArray.length; i++) {
 		if (paramsUI != null)
-			html_string += paramsArray[i] + "<input type='hidden' id='action_param_" + paramsArray[i] + "'>\n";
+			html_string += "<input type='hidden' id='action_param_" + paramsArray[i] + "'>\n";
 		else
 			html_string += paramsArray[i] + "<input type='text' id='action_param_" + paramsArray[i] + "' class='styled-text-input'>\n";
 	}
@@ -615,6 +604,8 @@ function fGetActionParamsJSON(action_id)
 
 function fGetActionUI(action_id)
 {
+	if (actions_data == null)
+		return null;
 	var one_data = actions_data[""+action_id];
 	
 	var action_ui = one_data['action_ui'];

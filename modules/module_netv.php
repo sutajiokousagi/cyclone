@@ -355,7 +355,7 @@ class module_netv extends baseclass_hybrid
 		{
 			$html_string =
 <<<END_OF_STRING_IDENTIFIER
-				<div class='btn-group' data-toggle='buttons-radio'>
+				Channel <div class='btn-group' data-toggle='buttons-radio'>
 					<button onclick='fOnTriggerParamChannel(0);' class='btn btn-primary' id='trigger_param_channel_0'>0</button>
 					<button onclick='fOnTriggerParamChannel(1);' class='btn btn-primary' id='trigger_param_channel_1'>1</button>
 					<button onclick='fOnTriggerParamChannel(2);' class='btn btn-primary' id='trigger_param_channel_2'>2</button>
@@ -391,7 +391,7 @@ END_OF_STRING_IDENTIFIER;
 		{
 			$html_string =
 <<<END_OF_STRING_IDENTIFIER
-				<div class='btn-group' data-toggle='buttons-radio'>
+				Channel <div class='btn-group' data-toggle='buttons-radio'>
 					<button onclick='fOnActionParamChannel(0);' class='btn btn-primary' id='action_param_channel_0'>0</button>
 					<button onclick='fOnActionParamChannel(1);' class='btn btn-primary' id='action_param_channel_1'>1</button>
 					<button onclick='fOnActionParamChannel(2);' class='btn btn-primary' id='action_param_channel_2'>2</button>
@@ -420,7 +420,7 @@ END_OF_STRING_IDENTIFIER;
 		{
 			$html_string =
 <<<END_OF_STRING_IDENTIFIER
-				<div class='btn-group' data-toggle='buttons-radio'>
+				Channel <div class='btn-group' data-toggle='buttons-radio'>
 					<button onclick='fOnActionParamChannel(1);' class='btn btn-primary' id='action_param_channel_1'>1</button>
 					<button onclick='fOnActionParamChannel(2);' class='btn btn-primary' id='action_param_channel_2'>2</button>
 					<button onclick='fOnActionParamChannel(3);' class='btn btn-primary' id='action_param_channel_3'>3</button>
