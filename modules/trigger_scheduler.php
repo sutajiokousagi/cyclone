@@ -109,7 +109,65 @@ class trigger_scheduler extends baseclass_trigger
 	{
 		if ($trigger_alias == self::ONCE_TRIGGER_ALIAS)
 		{
+			$html_string =
+<<<END_OF_STRING_IDENTIFIER
+				<link type="text/css" rel="stylesheet" href="./bootstrap/css/timepicker.css">
+				<link type="text/css" rel="stylesheet" href="./bootstrap/css/datepicker.css">
+				<script type='text/javascript' src='./bootstrap/js/bootstrap-timepicker.js'></script>
+				<script type='text/javascript' src='./bootstrap/js/bootstrap-datepicker.js'></script>
+				Date <input type="text" id="trigger_param_time_datepicker"><br/>
+				Time <input type="text" id="trigger_param_time_timepicker" class="dropdown-timepicker"/>
+				<script>
+					$('#trigger_param_time_datepicker').datepicker({
+						format: "yyyy-mm-dd",
+						weekStart: 1
+					}).on('changeDate', function(ev) {
+    					fUpdateTriggerParamDatetime();
+  					});
+					$('#trigger_param_time_timepicker').timepicker({
+		                defaultTime: 'current',
+		                minuteStep: 1,
+		                disableFocus: true,
+		                template: 'modal'
+		            });
+					$('#trigger_param_time_timepicker').change(function() {
+						fUpdateTriggerParamDatetime();
+					});
+					function fUpdateTriggerParamDatetime() {
+						var timeString = $('#trigger_param_time_timepicker').val();
 
+						//Extract time info
+						var hour = Number( timeString.split(":")[0] );
+						var minute = Number( timeString.split(":")[1].split(" ")[0] );
+						var ampm = timeString.split(" ")[1].toLowerCase();
+						if (ampm == "pm")
+							hour += 12;
+						
+						//Extract date info
+						var dateString = $('#trigger_param_time_datepicker').val();
+						var year = Number( dateString.split("-")[0] );
+						var month = Number( dateString.split("-")[1] );
+						var date = Number( dateString.split("-")[2] );
+
+						//Format the date
+						if (month < 10)		month = "0" + month;
+						if (date < 10)		date = "0" + date;
+						if (hour < 10)		hour = "0" + hour;
+						if (minute < 10)	minute = "0" + minute;
+						var comboString = year + "-" +  month + "-" + date + " " + hour + ":" + minute;
+						$('#trigger_param_datetime').text(comboString);
+
+						console.log(comboString);
+						return comboString;
+					}
+					var now = new Date();
+					var dateString = "" + now.getFullYear() + "-" + (now.getMonth()+1) + "-" + now.getDate();
+					$('#trigger_param_time_datepicker').val( dateString );
+					$('#trigger_param_time_timepicker').change();
+				</script>
+END_OF_STRING_IDENTIFIER;
+
+			return $html_string;
 		}
 		else if ($trigger_alias == self::DAILY_TRIGGER_ALIAS)
 		{
@@ -117,7 +175,7 @@ class trigger_scheduler extends baseclass_trigger
 <<<END_OF_STRING_IDENTIFIER
 				<link type="text/css" rel="stylesheet" href="./bootstrap/css/timepicker.css">
 				<script type='text/javascript' src='./bootstrap/js/bootstrap-timepicker.js'></script>
-				<input type="text" id="trigger_param_time_timepicker" class="dropdown-timepicker"/>
+				Time <input type="text" id="trigger_param_time_timepicker" class="dropdown-timepicker"/>
 				<script>
 					$('#trigger_param_time_timepicker').timepicker({
 		                defaultTime: 'current',
@@ -129,8 +187,8 @@ class trigger_scheduler extends baseclass_trigger
 						var newValue = $('#trigger_param_time_timepicker').val();
 
 						//Convert timepicker's format to our format
-						var hour = parseInt( newValue.split(":")[0] );
-						var minute = parseInt( newValue.split(":")[1].split(" ")[0] );
+						var hour = Number( newValue.split(":")[0] );
+						var minute = Number( newValue.split(":")[1].split(" ")[0] );
 						var ampm = newValue.split(" ")[1].toLowerCase();
 						if (ampm == "pm")
 							hour += 12;
@@ -147,7 +205,54 @@ END_OF_STRING_IDENTIFIER;
 		}
 		else if ($trigger_alias == self::WEEKLY_TRIGGER_ALIAS)
 		{
-			
+			$html_string =
+<<<END_OF_STRING_IDENTIFIER
+				<link type="text/css" rel="stylesheet" href="./bootstrap/css/timepicker.css">
+				<script type='text/javascript' src='./bootstrap/js/bootstrap-timepicker.js'></script>
+
+				Date <div class='btn-group' data-toggle='buttons-checkbox'>
+					<button onclick='fOnTriggerParamDays("mon");' class='btn btn-primary' id='trigger_param_days_2'>Mon</button>
+					<button onclick='fOnTriggerParamDays("tue");' class='btn btn-primary' id='trigger_param_days_3'>Tue</button>
+					<button onclick='fOnTriggerParamDays("wed");' class='btn btn-primary' id='trigger_param_days_4'>Wed</button>
+					<button onclick='fOnTriggerParamDays("thu");' class='btn btn-primary' id='trigger_param_days_5'>Thu</button>
+					<button onclick='fOnTriggerParamDays("fri");' class='btn btn-primary' id='trigger_param_days_6'>Fri</button>
+					<button onclick='fOnTriggerParamDays("sat");' class='btn btn-primary' id='trigger_param_days_7'>Sat</button>
+					<button onclick='fOnTriggerParamDays("sun");' class='btn btn-primary' id='trigger_param_days_1'>Sun</button>
+				</div><br/>
+				Time <input type="text" id="trigger_param_time_timepicker" class="dropdown-timepicker"/>
+
+				<script>
+					fOnTriggerParamDays("mon");
+					$('#trigger_param_days_2').button('toggle');
+					function fOnTriggerParamDays(newValue) {
+						$('#trigger_param_days').val( newValue );
+						console.log(newValue + ' selected');
+					}
+					$('#trigger_param_time_timepicker').timepicker({
+		                defaultTime: 'current',
+		                minuteStep: 1,
+		                disableFocus: true,
+		                template: 'modal'
+		            });
+					$('#trigger_param_time_timepicker').change(function() {
+						var newValue = $('#trigger_param_time_timepicker').val();
+
+						//Convert timepicker's format to our format
+						var hour = Number( newValue.split(":")[0] );
+						var minute = Number( newValue.split(":")[1].split(" ")[0] );
+						var ampm = newValue.split(" ")[1].toLowerCase();
+						if (ampm == "pm")
+							hour += 12;
+						var time24hr = "" + hour + ":" + minute;
+						console.log(time24hr);
+
+  						$('#trigger_param_time').text(time24hr);
+					});
+					$('#trigger_param_time_timepicker').change();
+				</script>
+END_OF_STRING_IDENTIFIER;
+
+			return $html_string;
 		}
 		return "";
 	}
