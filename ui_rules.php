@@ -8,7 +8,11 @@
 	<script type='text/javascript' src='./js/jquery.min.js'></script>
 	<script type='text/javascript' src='./js/jquery.json.min.js'></script>
 	<script type='text/javascript' src='./bootstrap/js/bootstrap.min.js'></script>
+	<script type='text/javascript' src='./bootstrap/js/bootstrap-alert.js'></script>
 	<script type='text/javascript' src='./bootstrap/js/bootstrap-button.js'></script>
+	<script type='text/javascript' src='./bootstrap/js/bootstrap-collapse.js'></script>
+	<script type='text/javascript' src='./bootstrap/js/bootstrap-dropdown.js'></script>
+	<script type='text/javascript' src='./bootstrap/js/bootstrap-modal.js'></script>
 	<script type='text/javascript' src='./bootstrap/js/bootstrap-tooltip.js'></script>
 	<script type='text/javascript' src='./js/util_general.js'></script>
 	<script type='text/javascript' src='./js/rules.js' charset="utf-8"></script>
@@ -25,7 +29,7 @@
 	require_once("util_rules.php");
 	require_once("util_preferences.php");
 	require_once("ui_rules_helper.php");
-		
+	
 	//Global variables
 	$user_id = 0;
 	$modules_array = array();

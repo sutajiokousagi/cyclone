@@ -102,7 +102,55 @@ class trigger_scheduler extends baseclass_trigger
 		return array();
 	}
 
-}
+	/*
+	 * Return JavaScript code for given trigger alias
+	 */
+	public function getUICodeForTriggerAlias($trigger_alias)
+	{
+		if ($trigger_alias == self::ONCE_TRIGGER_ALIAS)
+		{
 
+		}
+		else if ($trigger_alias == self::DAILY_TRIGGER_ALIAS)
+		{
+			$html_string =
+<<<END_OF_STRING_IDENTIFIER
+				<link type="text/css" rel="stylesheet" href="./bootstrap/css/timepicker.css">
+				<script type='text/javascript' src='./bootstrap/js/bootstrap-timepicker.js'></script>
+				<input type="text" id="trigger_param_time_timepicker" class="dropdown-timepicker"/>
+				<script>
+					$('#trigger_param_time_timepicker').timepicker({
+		                defaultTime: 'current',
+		                minuteStep: 1,
+		                disableFocus: true,
+		                template: 'modal'
+		            });
+					$('#trigger_param_time_timepicker').change(function() {
+						var newValue = $('#trigger_param_time_timepicker').val();
+
+						//Convert timepicker's format to our format
+						var hour = parseInt( newValue.split(":")[0] );
+						var minute = parseInt( newValue.split(":")[1].split(" ")[0] );
+						var ampm = newValue.split(" ")[1].toLowerCase();
+						if (ampm == "pm")
+							hour += 12;
+						var time24hr = "" + hour + ":" + minute;
+						console.log(time24hr);
+
+  						$('#trigger_param_time').text(time24hr);
+					});
+					$('#trigger_param_time_timepicker').change();
+				</script>
+END_OF_STRING_IDENTIFIER;
+
+			return $html_string;
+		}
+		else if ($trigger_alias == self::WEEKLY_TRIGGER_ALIAS)
+		{
+			
+		}
+		return "";
+	}
+}
 
 ?>
