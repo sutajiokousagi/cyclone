@@ -2,7 +2,7 @@
 
 	require_once ("util_configs.php");
 	require_once ("util_modules.php");
-	
+		
 	session_start();
 	
 	$cyclone_user_id = 0;
@@ -11,27 +11,27 @@
 	if (isset($_SESSION['cyclone_user_id']))	$cyclone_user_id = $_SESSION['cyclone_user_id'];
 	if ($cyclone_user_id <= 0)
 	    die("cyclone_user_id not set");
-				
+		
 	//Clean database
-	$module_id = func_getModuleIDByAlias('twitter');
+	$module_id = func_getModuleIDByAlias('gmail');
 	func_deleteConfig($module_id, $cyclone_user_id, 'oauth_token');
 	func_deleteConfig($module_id, $cyclone_user_id, 'oauth_token_secret');
 	func_deleteConfig($module_id, $cyclone_user_id, 'user_id');
 	func_deleteConfig($module_id, $cyclone_user_id, 'screen_name');
 
 	//Clean session variable
-	unset($_SESSION['ext_auth_twitter']);
-	unset($_SESSION['access_token_twitter']);
-
-	//Twitter doesn't need to logout explicitly, just clean the access tokens we have
+	unset($_SESSION['ext_auth_gmail']);
+	unset($_SESSION['access_token_gmail']);
+	
+	//Google doesn't need to logout explicitly, just clean the access tokens we have
 	//Redirect to our login page
 	$loginUrl = currentPageURL();
 	$loginUrl = str_replace('ext_logout', 'ext_login', $loginUrl);		
 	header('Location: ' . $loginUrl);
 	die();
-
-
-
+	
+	
+	
 	function currentPageURL()
 	{
 		$pageURL = 'http';

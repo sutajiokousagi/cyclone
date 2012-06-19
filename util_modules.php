@@ -55,6 +55,12 @@
 		return func_getSingleRowFromTable("modules", $condition);
 	}
 	
+	function func_getModuleIDByAlias($module_alias)
+	{
+		$one_record = func_getModuleByAlias($module_alias);
+		return $one_record["module_id"];
+	}
+	
 	function func_getModuleByTriggerID($trigger_id)
 	{
 		$sql = "SELECT * FROM triggers ";
