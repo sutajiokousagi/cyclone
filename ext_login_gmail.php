@@ -16,11 +16,10 @@
 		$cyclone_user_id = $_SESSION['cyclone_user_id'];
 	$_SESSION['cyclone_user_id'] = $cyclone_user_id;
 
-	$oauth_token = null;
-		
 	//Retrieve the secrets from database
+	$oauth_token = null;
 	$module_id = func_getModuleIDByAlias('gmail');
-	$sql_result_configs = func_getConfigsByModuleIDAndUserID($module_id, $cyclone_user_id);	
+	$sql_result_configs = func_getConfigsByModuleIDAndUserID($module_id, $cyclone_user_id);
 	while ($sql_result_configs != null && $one_record = mysql_fetch_assoc($sql_result_configs))
 	{
 		$config_name = $one_record['config_name'];
