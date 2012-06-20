@@ -21,16 +21,42 @@
 	$client->setScopes(array(
 		'https://mail.google.com/mail/feed/atom/'
 	));
+	
+	$callbackUrl = getCallbackURL();
 
 	// Documentation: http://code.google.com/googleapps/domain/provisioning_API_v2_developers_guide.html
 	// Visit https://code.google.com/apis/console to generate your
 	// oauth2_client_id, oauth2_client_secret, and to register your oauth2_redirect_uri.
 	$client->setClientId( func_getSystemPreference('system_ext_clientid_google') );
 	$client->setClientSecret( func_getSystemPreference('system_ext_clientsecret_google') );
-	$client->setRedirectUri( func_getSystemPreference('system_ext_callbackUrl_google') );
 	$client->setDeveloperKey( func_getSystemPreference('system_ext_devkey_google') );
+	$client->setRedirectUri( $callbackUrl );
 
 	//Redirect to Google auth page
   $url = $client->createAuthUrl();
   header('Location: ' . $url);
+
+
+	//---------------------------
+
+	function currentPageURL()
+	{
+		$pageURL = 'http';
+		if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+		$pageURL .= "://";
+		if ($_SERVER["SERVER_PORT"] != "80") {
+			$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+		} else {
+			$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+		}
+		return $pageURL;
+	}
+	
+	function getCallbackURL()
+	{
+		$url = currentPageURL();
+		$url = str_replace("auth", "callback", $url);
+		return $url;
+	}
+
 ?>

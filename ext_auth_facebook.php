@@ -18,8 +18,7 @@
 		'appId'  => func_getSystemPreference('system_ext_appid_facebook'),
 		'secret' => func_getSystemPreference('system_ext_appsecret_facebook'),
 	));
-	$callbackUrl = func_getSystemPreference('system_ext_callbackUrl_facebook');
-	$callbackUrl = $callbackUrl . "?cyclone_user_id=" . $cyclone_user_id;
+	$callbackUrl = getCallbackURL();
 
 	//Redirect to Facebook auth page
 	$loginParams = array('scope' => 'offline_access,publish_stream,user_birthday,user_location,user_about_me',
@@ -27,4 +26,28 @@
 	$url = $facebook->getLoginUrl($loginParams);			
 
 	header('Location: ' . $url);
+	
+	
+	
+	//---------------------------
+
+	function currentPageURL()
+	{
+		$pageURL = 'http';
+		if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+		$pageURL .= "://";
+		if ($_SERVER["SERVER_PORT"] != "80") {
+			$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+		} else {
+			$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+		}
+		return $pageURL;
+	}
+	
+	function getCallbackURL()
+	{
+		$url = currentPageURL();
+		$url = str_replace("auth", "callback", $url);
+		return $url;
+	}
 ?>

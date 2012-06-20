@@ -13,9 +13,11 @@
 	if ($cyclone_user_id <= 0)
 	    die("cyclone_user_id not set");
 	
+	$callbackUrl = getCallbackURL();
+	
 	//Generic OAuth consumer client module
 	$oAuthConfig = array(
-	    'callbackUrl'    => "" . func_getSystemPreference('system_ext_callbackUrl_twitter') . "?cyclone_user_id=$cyclone_user_id",
+	    'callbackUrl'    => $callbackUrl,
 			'consumerKey' 	 => func_getSystemPreference('system_ext_consumerKey_twitter'),
 			'consumerSecret' => func_getSystemPreference('system_ext_consumerSecret_twitter'),
 	    'siteUrl'        => 'http://twitter.com/oauth'
@@ -27,4 +29,27 @@
 	$_SESSION['ext_requestToken_twitter'] = serialize($token);       
 	$oAuthConsumer->redirect(); 
 
+
+	//---------------------------
+
+	function currentPageURL()
+	{
+		$pageURL = 'http';
+		if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+		$pageURL .= "://";
+		if ($_SERVER["SERVER_PORT"] != "80") {
+			$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+		} else {
+			$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+		}
+		return $pageURL;
+	}
+	
+	function getCallbackURL()
+	{
+		$url = currentPageURL();
+		$url = str_replace("auth", "callback", $url);
+		return $url;
+	}
+	
 ?>
