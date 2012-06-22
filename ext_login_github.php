@@ -2,6 +2,7 @@
 
 	set_include_path('modules' . PATH_SEPARATOR . get_include_path());
 
+	require_once ("github/github.php");
 	require_once ("util_preferences.php");
 	require_once ("util_modules.php");
 	require_once ("util_configs.php");
@@ -35,20 +36,14 @@
 	//Validate the secrets
 		
 	//Make a test API call
-	$user = null;
-  try {
-    // Proceed knowing you have a logged in user who's authenticated.
-    $user = getUser($oauth_token);
-		$user = json_decode($user, true);
-  } catch (Exception $e) {
-    error_log($e);
-    $user = null;
-  }
+	$githubApi = new GitHubApi();
+	$githubApi->setAcessToken($oauth_token);
+  $user = $githubApi->getUser();
 		
 	//Valid response
 	if ($user) {
-		showPrettyUser($user);
 		displayLogout();
+		showPrettyUser($user);
 		die();
 	}
 	
@@ -67,8 +62,8 @@
 	//--------------
 
 	function displayLogout() {
-    echo "<br><br>";
     echo "<a href='ext_logout_github.php'>Logout</a>";
+    echo "<br><br>";
 	}
 	
 	function displayLogin() {
@@ -79,26 +74,24 @@
 
 	//--------------
 
- 	function showPrettyUser($userInfoArray) {
-		$name = $userInfoArray['name'];
-		$avatar_url = $userInfoArray['avatar_url'];
+ 	function showPrettyUser($userInfoObj) {
+		$name = $userInfoObj->name;
+		$avatar_url = $userInfoObj->avatar_url;
 		echo "Logged in as <strong>" . $name . "</strong><br/>";
 		echo "<img src='" . $avatar_url . "'><br/>";
-	}
-	
-	function getUser($oauth_token) {
-		$url = "https://api.github.com/user?access_token=" . $oauth_token;
 		
-		$ch = curl_init(); 
-		curl_setopt($ch, CURLOPT_URL, $url); 
-    curl_setopt($ch, CURLOPT_HEADER, FALSE); 
-    curl_setopt($ch, CURLOPT_NOBODY, FALSE);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
-    $response = curl_exec($ch); 
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); 
-    curl_close($ch);
-
-		return $response;
+		global $githubApi;
+	  $repos = $githubApi->getUserRepos(null, null, null);
+		//$repos = $githubApi->getOrganizationRepos('2359media', null);
+	
+		if ($repos != null) {
+			foreach ($repos as $repo) {
+				echo $repo->private ? "[Private] " : "[Public] ";
+				echo $repo->fork ? "[Watching] " : "";
+				echo $repo->name;
+				echo "<br/>\n";
+			}
+		}
 	}
 	
 ?>
