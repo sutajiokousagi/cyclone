@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 29, 2012 at 02:46 AM
+-- Generation Time: Jul 01, 2012 at 02:49 AM
 -- Server version: 5.1.40
 -- PHP Version: 5.2.13
 
@@ -174,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `modules` (
   `module_role` int(11) NOT NULL DEFAULT '0' COMMENT '0: triggers, 1: filters, 2: actions, 3: hybrid',
   `module_description` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`module_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
 
 --
 -- Dumping data for table `modules`
@@ -185,14 +185,16 @@ INSERT INTO `modules` (`module_id`, `module_enabled`, `module_name`, `module_ali
 (2, 0, 'Twitter', 'twitter', 2, 3, 'A module that generates triggers based on user''s Twitter events'),
 (3, 0, 'Facebook', 'facebook', 2, 3, 'A module that generates triggers based on user''s Facebook events'),
 (4, 0, 'RSS', 'rss', 0, 0, 'A module that generates triggers based on content changes of an RSS feed'),
-(5, 1, 'HDMI', 'hdmi', 1, 0, 'A module that generates triggers based on HDMI hardware events'),
-(6, 1, 'Network', 'network', 1, 0, 'A module that generates triggers based on network hardware events'),
+(5, 0, 'HDMI', 'hdmi', 1, 0, 'A module that generates triggers based on HDMI hardware events'),
+(6, 0, 'Network', 'network', 1, 0, 'A module that generates triggers based on network hardware events'),
 (7, 1, 'GMail', 'gmail', 2, 0, 'A module that generates triggers based on user''s GMail events'),
 (8, 1, 'HelloTrigger', 'hellotrigger', 0, 0, 'A simple HelloWorld module with sample triggers'),
 (9, 1, 'HelloFilter', 'hellofilter', 0, 1, 'A simple HelloFilter module with basic string, number & datetime processing'),
 (10, 1, 'HelloAction', 'helloaction', 0, 2, 'A simple HelloAction module with basic sample actions'),
 (11, 0, 'iOS', 'ios', 0, 0, 'A module that generates triggers based on iOS device event'),
-(12, 1, 'NeTV', 'netv', 1, 3, 'A hardware module for NeTV motor controller board');
+(12, 1, 'NeTV', 'netv', 1, 3, 'A hardware module for NeTV motor controller board'),
+(13, 1, 'Github', 'github', 2, 3, 'Github'),
+(14, 1, 'Dropbox', 'dropbox', 2, 3, 'Dropbox');
 
 -- --------------------------------------------------------
 
@@ -209,7 +211,7 @@ CREATE TABLE IF NOT EXISTS `preferences` (
   `preference_description` varchar(255) DEFAULT NULL,
   `last_updated` datetime NOT NULL,
   PRIMARY KEY (`preference_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=92 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
 
 --
 -- Dumping data for table `preferences`
@@ -219,14 +221,15 @@ INSERT INTO `preferences` (`preference_id`, `user_id`, `preference_name`, `prefe
 (1, 1, 'refresh_interval', '5', 'This is just a testing key-value pair', '0000-00-00 00:00:00'),
 (62, 1, '11_previous_location', '{"longitude":"103.844007","latitude":"1.343378","accuracy":"6989.000000"}', NULL, '2012-04-12 19:00:04'),
 (61, 1, '11_current_location', '{"longitude":"103.844554","latitude":"1.341742","accuracy":"1414.000000"}', NULL, '2012-04-23 20:54:49'),
-(83, 0, 'system_ext_callbackUrl_facebook', 'http://cyclone.torinnguyen.com/ext_callback_facebook.php', NULL, '2012-05-12 00:00:00'),
-(69, 0, 'system_ext_callbackUrl_twitter', 'http://cyclone.torinnguyen.com/ext_callback_twitter.php', NULL, '2012-04-26 00:00:00'),
 (70, 0, 'system_ext_consumerKey_twitter', 'Ab7Iba57LHmhNJAO9BWstg', NULL, '2012-04-26 00:00:00'),
 (71, 0, 'system_ext_consumerSecret_twitter', 'd4OuPNkJHHLMKcMzPhtf9MBSbdo9EG6jPeclYbvrg', NULL, '2012-04-26 00:00:00'),
 (84, 0, 'system_ext_consumerKey_facebook', 'Ab7Iba57LHmhNJAO9BWstg', NULL, '2012-05-12 00:00:00'),
 (85, 0, 'system_ext_consumerSecret_facebook', 'd4OuPNkJHHLMKcMzPhtf9MBSbdo9EG6jPeclYbvrg', NULL, '2012-05-12 00:00:00'),
 (86, 0, 'system_ext_appid_facebook', '434020086610951', NULL, '2012-05-12 00:00:00'),
-(87, 0, 'system_ext_appsecret_facebook', '9df5f69549775f4d4da8719e5343f81b', NULL, '2012-05-12 00:00:00');
+(87, 0, 'system_ext_appsecret_facebook', '9df5f69549775f4d4da8719e5343f81b', NULL, '2012-05-12 00:00:00'),
+(98, 0, 'system_ext_clientid_google', '1086718753030-lbjlou67ndlkbbern68df611tmolpnlr.apps.googleusercontent.com', NULL, '2012-06-30 00:00:00'),
+(99, 0, 'system_ext_clientsecret_google', 'nPuKwfIeBH0S1sD9I3VV0Cx1', NULL, '2012-06-30 00:00:00'),
+(100, 0, 'system_ext_devkey_google', 'AIzaSyACnxZ-w2Ephv5kwjajx-fAGSvWE1gHxlA', NULL, '2012-06-30 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -255,11 +258,8 @@ CREATE TABLE IF NOT EXISTS `rules` (
 --
 
 INSERT INTO `rules` (`rule_id`, `trigger_id`, `trigger_param`, `user_id`, `filter_id`, `filter_param`, `action_id`, `action_param`, `rule_description`, `rule_enabled`, `last_updated`) VALUES
-(2, 17, NULL, 1, 0, NULL, 1, '{"text":"This is just a test of simple echo action on even minutes."}', 'Test simple ''echo'' action on even minutes', 0, '2012-02-16 00:31:00'),
-(3, 18, NULL, 1, 0, NULL, 1, '{"text":"This is just a test of simple echo action on odd minutes."}', 'Test simple ''echo'' action on odd minutes', 0, '2012-02-16 00:31:00'),
-(14, 21, '{"datetime":"2012-04-06 02:47"}	', 1, 0, NULL, 2, '{"to":"torinnguyen@gmail.com","subject":"Test one-shot trigger","message":"hello!"}', 'Test email module once', 1, '2012-03-26 11:09:39'),
-(15, 20, '{"days":"mon,tue,wed,thu,fri","time":"05:10"}', 1, 0, NULL, 2, '{"to":"torinnguyen@gmail.com","subject":"Testing weekly trigger","message":"Testing"}', 'Testing weekdays email', 0, '2012-03-21 23:51:52'),
-(16, 19, '{"time":"05:15"}', 1, 0, NULL, 2, '{"to":"torinnguyen@gmail.com","subject":"Testing daily trigger","message":"Testing "}', 'Testing daily email', 0, '2012-03-21 23:51:52'),
+(14, 21, '{"datetime":"2012-04-06 02:47"}	', 1, 0, NULL, 2, '{"to":"torinnguyen@gmail.com","subject":"Test one-shot trigger","message":"hello!"}', 'Test email module once', 0, '2012-06-17 02:47:53'),
+(15, 20, '{"days":"mon,tue,wed,thu,fri","time":"05:10"}', 1, 0, NULL, 2, '{"to":"torinnguyen@gmail.com","subject":"Testing weekly trigger","message":"Testing"}', 'Testing weekdays email', 1, '2012-06-17 02:36:17'),
 (19, 21, '{"datetime":"2012-04-06 04:55"}', 1, 0, NULL, 3, '{"text":"Auto-tweet with Cyclone  (http://cyclone.torinnguyen.com/ui_rules.php) at 4:55am when I clearly should be sleeping :)"}', 'Test Tweeter module once', 0, '2012-04-06 02:06:28'),
 (28, 26, '{"url":"http://www.engadget.com/rss.xml"}', 1, 0, NULL, 2, '{"to":"torinnguyen@gmail.com","subject":"Engadget RSS feed has [count] new article(s)","message":"Engadget RSS feed [url] <br>has [count] new article(s). <br/>Titles: [titles]"}', 'Inform me by email when Engadget has new article', 0, '2012-04-09 02:49:46'),
 (23, 23, '{"distance":"300","longitude":"103.8455021","latitude":"1.3417876"}', 1, 0, NULL, 3, '{"text":"Auto-tweet by Cyclone. Reaching home...[distance]m"}', 'Send a tweet when I''m reaching home', 1, '2012-04-08 22:10:57'),
@@ -274,7 +274,7 @@ INSERT INTO `rules` (`rule_id`, `trigger_id`, `trigger_param`, `user_id`, `filte
 (47, 18, NULL, 1, 0, NULL, 8, '{"channel":"3"}', 'Test NeTV motor control on odd minutes', 1, '2012-05-27 01:51:34'),
 (48, 27, '{"channel":"1"}', 1, 0, NULL, 5, '{"channel":"3"}', NULL, 1, '2012-05-29 00:28:59'),
 (49, 28, '{"channel":"1"}', 1, 0, NULL, 6, '{"channel":"3"}', NULL, 1, '2012-05-29 00:29:15'),
-(50, 30, '{"channel":"4"}', 1, 0, NULL, 5, '{"channel":"2"}', NULL, 1, '2012-05-29 00:36:15');
+(50, 30, '{"channel":"4"}', 1, 0, NULL, 5, '{"channel":"2"}', NULL, 1, '2012-06-17 02:45:29');
 
 -- --------------------------------------------------------
 
