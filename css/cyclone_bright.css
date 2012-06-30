@@ -1,0 +1,156 @@
+html {
+    overflow: auto;
+}
+
+body {
+	background-color: #EEEEEE;
+	color: black;
+	font-family: Helvetica;
+	font-size: 14px;
+
+    padding: 10px; 
+	overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ---------------------------------- */
+/* Trigger module buttons */
+
+.trigger_module_button {
+	cursor: pointer;
+	text-align: center;
+	padding: 10px;
+	background-color: #EEEEEE;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	-webkit-transform: scale(0.9);
+}
+
+.trigger_module_button:hover, .trigger_module_button_selected {
+	color: #00b0f0;
+	-webkit-transform: scale(1);
+	background-color: white;
+	border-radius: 16px;
+	-moz-border-radius: 16px;
+	box-shadow: 0px 0px 2px #BBBBBB;
+	-moz-box-shadow: 0px 0px 2px #BBBBBB;
+	-webkit-box-shadow: 0px 0px 2px #BBBBBB;	
+}
+
+/* ---------------------------------- */
+/* Trigger buttons */
+
+.trigger_button {
+	cursor: pointer;
+	text-align: justify;
+	padding: 16px;
+	background-color: #DDDDDD;
+	border-radius: 16px;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+}
+
+.trigger_button:hover, .trigger_button_selected {
+	color: #00b0f0;
+	background-color: white;
+	box-shadow: 0px 0px 2px #BBBBBB;
+	-moz-box-shadow: 0px 0px 2px #BBBBBB;
+	-webkit-box-shadow: 0px 0px 2px #BBBBBB;
+}
+
+.trigger_param {
+	padding-top: 16px;
+}
+
+/* ---------------------------------- */
+/* Action module buttons, identical to trigger module buttons */
+
+.action_module_button {
+	cursor: pointer;
+	text-align: center;
+	padding: 10px;
+	background-color: #EEEEEE;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	-webkit-transform: scale(0.9);
+}
+
+.action_module_button:hover, .action_module_button_selected {
+	color: #00b0f0;
+	-webkit-transform: scale(1);
+	background-color: white;
+	border-radius: 16px;
+	-moz-border-radius: 16px;
+	box-shadow: 0px 0px 2px #BBBBBB;
+	-moz-box-shadow: 0px 0px 2px #BBBBBB;
+	-webkit-box-shadow: 0px 0px 2px #BBBBBB;	
+}
+
+/* ---------------------------------- */
+/* Action buttons, identical to  trigger buttons */
+
+.action_button {
+	cursor: pointer;
+	text-align: justify;
+	padding: 16px;
+	background-color: #DDDDDD;
+	border-radius: 16px;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+}
+
+.action_button:hover, .action_button_selected {
+	color: #00b0f0;
+	background-color: white;
+	box-shadow: 0px 0px 2px #BBBBBB;
+	-moz-box-shadow: 0px 0px 2px #BBBBBB;
+	-webkit-box-shadow: 0px 0px 2px #BBBBBB;
+}
+
+.action_param {
+	padding-top: 16px;
+}
+
+
+
+
+
+
+
+/* ---------------------------------- */
+/* Custom combobox */
+.styled-select {
+	overflow: hidden;
+}
+.styled-select select {
+	background: #DDDDDD;
+	color: black;
+	width: 100%;
+	border: 1px dashed #888888;
+	padding: 3px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.styled-text-input {
+	background: #DDDDDD;
+	color: black;
+	width: 100%;
+	border: 1px dashed #888888;
+	padding: 3px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.styled-module-name {
+	color: #00b0f0;
+}
+
+.styled-param_value {
+	font-style:italic;
+	color: #888888;
+}

@@ -50,14 +50,16 @@
 	$client->setClientSecret( func_getSystemPreference('system_ext_clientsecret_google') );
 	$client->setRedirectUri( func_getSystemPreference('system_ext_callbackUrl_google') );
 	$client->setDeveloperKey( func_getSystemPreference('system_ext_devkey_google') );
-  $client->setAccessToken($oauth_token);
+  	$client->setAccessToken($oauth_token);
 
 	//Make a test API call
-  $req = new apiHttpRequest("https://mail.google.com/mail/feed/atom/");
-  $resp = $client->getIo()->authenticatedRequest($req);
+  	$req = new apiHttpRequest("https://mail.google.com/mail/feed/atom/");
+  	$resp = $client->getIo()->authenticatedRequest($req);
 	$responseString = $resp->getResponseBody();
 	$responseStringLower = strtolower($responseString);
 	$valid = !func_contains($responseStringLower, "unauthorized") && !func_contains($responseStringLower, "error");
+
+	var_dump($req);
 
 	//Valid response
 	if ($valid) {
