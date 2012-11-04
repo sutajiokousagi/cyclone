@@ -111,8 +111,8 @@ then
 	
 	# Set timezone (non-volatile)
 	#echo $timezonefile
-	if [ -d /psp/ ];
-		cp -f $timezonefile /psp/localtime
+	if [ -d /psp/ ]; then
+		cp -f $timezonefile /psp/localtime;
 	fi
 	sync
 fi
